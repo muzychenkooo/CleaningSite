@@ -209,7 +209,7 @@ export function GallerySection() {
                 >
                   <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-slate-200 shadow-sm">
                     <Image
-                      src={photo.src}
+                      src={assetUrl(photo.src)}
                       alt={photo.alt}
                       fill
                       className="object-cover"
@@ -287,7 +287,7 @@ export function GallerySection() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="relative h-40 w-full sm:w-56 shrink-0 rounded-lg overflow-hidden bg-slate-200">
                   <Image
-                    src="/assets/restaurant/restaurant.png"
+                    src={assetUrl('/assets/restaurant/restaurant.png')}
                     alt={report.title}
                     fill
                     className="object-cover"

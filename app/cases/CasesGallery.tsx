@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { assetUrl } from '@/lib/asset-url';
 
 export const cases = [
   {
@@ -54,7 +55,7 @@ export function CasesGallery() {
           <button
             key={c.id}
             type="button"
-            onClick={() => setOpen({ src: c.src, alt: c.title })}
+            onClick={() => setOpen({ src: assetUrl(c.src), alt: c.title })}
             aria-label={`Открыть: ${c.title}`}
             className="group rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow text-left cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
           >
@@ -62,7 +63,7 @@ export function CasesGallery() {
             <div className="flex items-center justify-center bg-slate-100 p-3 h-64">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={c.src}
+                src={assetUrl(c.src)}
                 alt={c.title}
                 loading="lazy"
                 className="h-full w-full object-contain rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"

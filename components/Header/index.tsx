@@ -10,6 +10,7 @@ import { Topbar } from './Topbar';
 import { MainNav } from './MainNav';
 import { HeaderCtas } from './HeaderCtas';
 import { MobileNavDrawer } from './MobileNavDrawer';
+import { assetUrl } from '@/lib/asset-url';
 
 /**
  * Шапка: верхняя полоса (Topbar) + основная строка (логотип | нав | CTA).
@@ -39,7 +40,7 @@ export function Header() {
             aria-label="Большая Уборка — главная"
           >
             <Image
-              src="/assets/logo/new_logo.png"
+              src={assetUrl('/assets/logo/new_logo.png')}
               alt="Большая Уборка"
               width={200}
               height={56}
