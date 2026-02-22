@@ -1,5 +1,6 @@
 import { Container } from '@/components/layout/container';
 import { VideoWithOverlay } from '@/components/ui/VideoWithOverlay';
+import { assetUrl } from '@/lib/asset-url';
 
 export function AboutSection() {
   return (
@@ -39,8 +40,8 @@ export function AboutSection() {
 
           {/* Video column */}
           <VideoWithOverlay
-            src="/assets/about/about-video.mp4"
-            poster="/assets/gallery/1000004534.jpg"
+            src={assetUrl('/assets/about/about-video.mp4')}
+            poster={assetUrl('/assets/gallery/1000004534.jpg')}
             label="Видео о компании Большая Уборка"
             wrapperClassName="w-full rounded-2xl shadow-lg bg-slate-900"
             videoClassName="w-full h-auto max-h-[480px] object-cover rounded-2xl"

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Container } from '@/components/layout/container';
 import { completedReports } from '@/data/reports';
 import { VideoWithOverlay } from '@/components/ui/VideoWithOverlay';
+import { assetUrl } from '@/lib/asset-url';
 
 /* ─── Gallery photos ─────────────────────────────────────────────────── */
 const galleryPhotos = [
@@ -261,15 +262,15 @@ export function GallerySection() {
         </h2>
         <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-start">
           <VideoWithOverlay
-            src="/assets/videos/video1.mp4"
-            poster="/assets/gallery/posle-remonta.jpg"
+            src={assetUrl('/assets/videos/video1.mp4')}
+            poster={assetUrl('/assets/gallery/posle-remonta.jpg')}
             label="Видео с нами — 1"
             wrapperClassName="flex-1 rounded-xl bg-slate-900 shadow-sm"
             videoClassName="w-full aspect-video object-cover"
           />
           <VideoWithOverlay
-            src="/assets/videos/video2.mp4"
-            poster="/assets/gallery/20220806.jpg"
+            src={assetUrl('/assets/videos/video2.mp4')}
+            poster={assetUrl('/assets/gallery/20220806.jpg')}
             label="Видео с нами — 2"
             wrapperClassName="flex-1 rounded-xl bg-slate-900 shadow-sm"
             videoClassName="w-full aspect-video object-cover"

@@ -2,13 +2,14 @@
 
 import * as React from 'react';
 import { Container } from '@/components/layout/container';
+import { assetUrl } from '@/lib/asset-url';
 
 /* ─── Source of truth: only videos present in Наполнение/фото/Видеоотзывы ── */
 const videoReviews = [
-  { id: '1', name: 'Отзыв Людмилы',   src: '/assets/video-reviews/lyudmila.mp4'  },
-  { id: '2', name: 'Отзыв Маргариты', src: '/assets/video-reviews/margarita.mp4' },
-  { id: '3', name: 'Отзыв Ольги',     src: '/assets/video-reviews/olga.mov'      },
-  { id: '4', name: 'Отзыв Алексея',   src: '/assets/video-reviews/aleksei.mp4'   },
+  { id: '1', name: 'Отзыв Людмилы',   src: assetUrl('/assets/video-reviews/lyudmila.mp4')  },
+  { id: '2', name: 'Отзыв Маргариты', src: assetUrl('/assets/video-reviews/margarita.mp4') },
+  { id: '3', name: 'Отзыв Ольги',     src: assetUrl('/assets/video-reviews/olga.mov')      },
+  { id: '4', name: 'Отзыв Алексея',   src: assetUrl('/assets/video-reviews/aleksei.mp4')   },
 ];
 
 const TOTAL = videoReviews.length;
