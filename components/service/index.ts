@@ -1,0 +1,11 @@
+export { ServiceHero } from './ServiceHero';
+export { ServiceChecklist } from './ServiceChecklist';
+export { ServiceForWhom } from './ServiceForWhom';
+export { ServiceProcess } from './ServiceProcess';
+export { ServicePriceBlock } from './ServicePriceBlock';
+export { ServiceGuarantees } from './ServiceGuarantees';
+export { ServiceEquipment } from './ServiceEquipment';
+export { ServiceFaq } from './ServiceFaq';
+export { ServiceCtaStrip } from './ServiceCtaStrip';
+export { ServiceCrossLinks } from './ServiceCrossLinks';
+export { ServiceAnchorSections } from './ServiceAnchorSections';

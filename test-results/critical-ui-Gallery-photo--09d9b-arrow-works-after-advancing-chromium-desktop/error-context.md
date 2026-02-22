@@ -1,0 +1,690 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - link "biguborka@yandex.ru" [ref=e6] [cursor=pointer]:
+          - /url: mailto:biguborka@yandex.ru
+        - generic [ref=e7]: Круглосуточно
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - link "WhatsApp" [ref=e10] [cursor=pointer]:
+            - /url: https://wa.me/79957979996
+          - link "VK" [ref=e11] [cursor=pointer]:
+            - /url: "#"
+            - text: Vk
+          - link "Telegram" [ref=e12] [cursor=pointer]:
+            - /url: "#"
+        - link "8 (995) 797-99-96" [ref=e13] [cursor=pointer]:
+          - /url: tel:79957979996
+    - generic [ref=e15]:
+      - link "Большая Уборка — главная" [ref=e16] [cursor=pointer]:
+        - /url: /
+        - img "Большая Уборка" [ref=e17]
+      - navigation "Основное меню" [ref=e19]:
+        - link "Частным клиентам" [ref=e20] [cursor=pointer]:
+          - /url: /private/
+        - link "Для бизнеса" [ref=e21] [cursor=pointer]:
+          - /url: /business/
+        - link "Цены" [ref=e22] [cursor=pointer]:
+          - /url: /prices/
+        - link "Примеры работ" [ref=e23] [cursor=pointer]:
+          - /url: /cases/
+        - link "Отзывы" [ref=e24] [cursor=pointer]:
+          - /url: /reviews/
+        - link "О нас" [ref=e25] [cursor=pointer]:
+          - /url: /about/
+        - link "Вакансии" [ref=e26] [cursor=pointer]:
+          - /url: /vacancies/
+        - link "Контакты" [ref=e27] [cursor=pointer]:
+          - /url: /contacts/
+      - generic [ref=e28]:
+        - link "Рассчитать цену" [ref=e29] [cursor=pointer]:
+          - /url: /quiz/
+        - link "Обратный звонок" [ref=e30] [cursor=pointer]:
+          - /url: /#zayavka
+  - main [ref=e31]:
+    - generic [ref=e32]:
+      - generic [ref=e35]:
+        - heading "КЛИНИНГОВАЯ КОМПАНИЯ" [level=1] [ref=e36]
+        - heading "БОЛЬШАЯ УБОРКА" [level=2] [ref=e37]
+        - paragraph [ref=e38]: Профессиональная уборка. Для частных лиц и организаций. В Москве и Московской области.
+        - generic [ref=e39]:
+          - link "Обратный звонок" [ref=e40] [cursor=pointer]:
+            - /url: /#zayavka
+          - link "Рассчитать стоимость" [ref=e41] [cursor=pointer]:
+            - /url: /?open=quiz#rasschet
+      - generic [ref=e43]:
+        - heading "Узнайте стоимость за 2 минуты" [level=2] [ref=e44]
+        - paragraph [ref=e45]: Пройдите короткий квиз — выберите тип уборки и параметры. Мы подготовим смету и перезвоним в течение 5–10 минут.
+        - button "Пройти квиз" [ref=e46] [cursor=pointer]
+      - generic [ref=e48]:
+        - heading "Наши услуги" [level=2] [ref=e49]
+        - generic [ref=e50]:
+          - tablist "Категория услуг" [ref=e51]:
+            - tab "Для частных клиентов" [selected] [ref=e52] [cursor=pointer]
+            - tab "Для бизнеса" [ref=e53] [cursor=pointer]
+          - paragraph [ref=e54]: "Примеры популярных услуг:"
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - generic [ref=e57]:
+                - generic [ref=e58]:
+                  - heading "Уборка квартир" [level=3] [ref=e59]
+                  - paragraph [ref=e60]: Профессиональная уборка квартир любой площади. Мойка окон, уборка мебели и сантехники. Гибкий график и безопасность.
+                - link "Узнать больше" [ref=e62] [cursor=pointer]:
+                  - /url: /uslugi/uborka-kvartir/
+              - generic [ref=e63]:
+                - generic [ref=e64]:
+                  - heading "Уборка частных домов" [level=3] [ref=e65]
+                  - paragraph [ref=e66]: Спектр услуг по уборке помещений различного назначения.
+                - link "Узнать больше" [ref=e68] [cursor=pointer]:
+                  - /url: /uslugi/uborka-domov/
+              - generic [ref=e69]:
+                - generic [ref=e70]:
+                  - heading "Мытье окон" [level=3] [ref=e71]
+                  - paragraph [ref=e72]: "Мойка окон и фасадов: профессиональные услуги, современное оборудование, экологически чистые средства."
+                - link "Узнать больше" [ref=e74] [cursor=pointer]:
+                  - /url: /uslugi/mojka-okon/
+              - generic [ref=e75]:
+                - generic [ref=e76]:
+                  - heading "Химчистка" [level=3] [ref=e77]
+                  - paragraph [ref=e78]: "Химчистка коммерческих помещений: профессиональная уборка, дезинфекция и уход за мебелью."
+                - link "Узнать больше" [ref=e80] [cursor=pointer]:
+                  - /url: /uslugi/himchistka/
+            - link "Посмотреть все услуги" [ref=e82] [cursor=pointer]:
+              - /url: /private/
+      - generic [ref=e85]:
+        - generic [ref=e86]:
+          - heading "О нас" [level=2] [ref=e87]
+          - paragraph [ref=e88]: Компания «Большая уборка» — ваш надёжный партнёр в создании чистоты и порядка. Мы — команда опытных профессионалов, предлагающая широкий спектр услуг по уборке. Наше кредо — качество, надёжность и индивидуальный подход к каждому клиенту. Доверьте нам заботу о вашем пространстве, и вы оцените безупречный результат!
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - generic [ref=e91]: ✓
+              - text: Работаем в Москве и Московской области
+            - listitem [ref=e92]:
+              - generic [ref=e93]: ✓
+              - text: Профессиональное оборудование и сертифицированная химия
+            - listitem [ref=e94]:
+              - generic [ref=e95]: ✓
+              - text: Гарантия результата — переделаем бесплатно при претензии
+            - listitem [ref=e96]:
+              - generic [ref=e97]: ✓
+              - text: Более 5 лет опыта, сотни довольных клиентов
+        - generic [ref=e98]:
+          - generic "Видео о компании Большая Уборка" [ref=e99]
+          - button "Запустить видео" [ref=e100] [cursor=pointer]:
+            - img [ref=e102]
+      - generic [ref=e105]:
+        - heading "Чем мы отличаемся от других клинингов" [level=2] [ref=e106]
+        - paragraph [ref=e107]: Команда опытных профессионалов, качество и индивидуальный подход к каждому клиенту.
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - heading "Профессионализм" [level=3] [ref=e110]
+            - paragraph [ref=e111]: В компании работают опытные специалисты, которые обеспечивают высокое качество уборки, используя современные методы и средства.
+          - generic [ref=e112]:
+            - heading "Широкий спектр услуг" [level=3] [ref=e113]
+            - paragraph [ref=e114]: Мы предлагаем разнообразные услуги, включая уборку квартир, офисов, а также специализированные услуги, такие как уборка после ремонта.
+          - generic [ref=e115]:
+            - heading "Гибкость в обслуживании" [level=3] [ref=e116]
+            - paragraph [ref=e117]: Компания предоставляет возможность выбора времени и частоты уборок, что позволяет клиентам адаптировать услуги под свои нужды и график.
+          - generic [ref=e118]:
+            - heading "Конкурентные цены" [level=3] [ref=e119]
+            - paragraph [ref=e120]: Предлагаем доступные расценки на свои услуги, включая скидки при больших объемах работ.
+          - generic [ref=e121]:
+            - heading "Отличные отзывы клиентов" [level=3] [ref=e122]
+            - paragraph [ref=e123]: Море положительных отзывов, что свидетельствует о высоком уровне удовлетворенности клиентов и надежности предоставляемых услуг.
+          - generic [ref=e124]:
+            - heading "Экологичность" [level=3] [ref=e125]
+            - paragraph [ref=e126]: В процессе уборки используются безопасные для здоровья и окружающей среды чистящие средства, что особенно важно для семей с детьми и аллергиками.
+      - generic [ref=e129]:
+        - heading "Специальное предложение!" [level=2] [ref=e130]
+        - paragraph [ref=e131]: Заполните заявку на уборку прямо сейчас и получите скидку 10%
+        - generic [ref=e132]:
+          - generic [ref=e133]: 14Минут
+          - generic [ref=e134]: 51Секунд
+        - link "Обратный звонок" [ref=e135] [cursor=pointer]:
+          - /url: /#zayavka
+      - generic [ref=e137]:
+        - heading "Клиенты скажут вам больше" [level=2] [ref=e138]
+        - generic [ref=e140]:
+          - generic [ref=e141]:
+            - generic [ref=e142]:
+              - generic [ref=e143]:
+                - button "Все отзывы" [ref=e144] [cursor=pointer]
+                - button "Яндекс ★ 5.0" [ref=e145] [cursor=pointer]:
+                  - generic [ref=e146]: Я
+                  - text: Яндекс
+                  - generic [ref=e147]: ★ 5.0
+                - button "2ГИС ★ 5.0" [ref=e148] [cursor=pointer]:
+                  - generic [ref=e149]: "2"
+                  - text: 2ГИС
+                  - generic [ref=e150]: ★ 5.0
+                - button "Авито ★ 5.0" [ref=e151] [cursor=pointer]:
+                  - generic [ref=e152]: А
+                  - text: Авито
+                  - generic [ref=e153]: ★ 5.0
+                - button "Profi.ru ★ 5.0" [ref=e154] [cursor=pointer]:
+                  - generic [ref=e155]: P
+                  - text: Profi.ru
+                  - generic [ref=e156]: ★ 5.0
+                - button "Google ★ 5.0" [ref=e157] [cursor=pointer]:
+                  - generic [ref=e158]: G
+                  - text: Google
+                  - generic [ref=e159]: ★ 5.0
+              - paragraph [ref=e160]: 10 отзывов из 5 источников
+            - link "Оставить отзыв" [ref=e161] [cursor=pointer]:
+              - /url: https://yandex.com/profile/161532445525?intent=reviews
+              - text: Оставить отзыв
+              - img [ref=e162]
+          - generic "Слайдер с отзывами" [ref=e164]:
+            - generic [ref=e165]:
+              - article [ref=e167]:
+                - generic [ref=e168]:
+                  - generic [ref=e169]: МК
+                  - generic [ref=e170]:
+                    - generic [ref=e171]:
+                      - generic [ref=e172]: Марина К.
+                      - img "5 из 5 звёзд" [ref=e173]:
+                        - img [ref=e174]
+                        - img [ref=e176]
+                        - img [ref=e178]
+                        - img [ref=e180]
+                        - img [ref=e182]
+                    - paragraph [ref=e184]: 14 января 2026
+                - paragraph [ref=e185]: Заказывала генеральную уборку трёхкомнатной квартиры после ремонта. Команда из трёх человек справилась за 5 часов — убрали пыль со всех поверхностей, отмыли окна изнутри, вычистили плитку в ванной и кухне до блеска. Отдельное спасибо за аккуратность с новой мебелью. Результат превзошёл ожидания, буду обращаться регулярно.
+                - link "Отзыв из Яндекс" [ref=e186] [cursor=pointer]:
+                  - /url: https://yandex.com/profile/161532445525?intent=reviews&utm_source=qr&utm_medium=qr_image&utm_campaign=v1
+                  - generic [ref=e187]: Я
+                  - text: Отзыв из Яндекс
+                  - img [ref=e188]
+              - article [ref=e191]:
+                - generic [ref=e192]:
+                  - generic [ref=e193]: ДО
+                  - generic [ref=e194]:
+                    - generic [ref=e195]:
+                      - generic [ref=e196]: Дмитрий Орлов
+                      - img "5 из 5 звёзд" [ref=e197]:
+                        - img [ref=e198]
+                        - img [ref=e200]
+                        - img [ref=e202]
+                        - img [ref=e204]
+                        - img [ref=e206]
+                    - paragraph [ref=e208]: 29 января 2026
+                - paragraph [ref=e209]: "Обратились за уборкой офиса (около 200 м²). Приехали вовремя, всё сделали чётко: вымыли полы, протёрли столы и технику, почистили санузлы. Договор, акт выполненных работ — всё по-взрослому. Работали в вечернее время, не мешали сотрудникам. Продолжаем сотрудничество."
+                - link "Отзыв из 2ГИС" [ref=e210] [cursor=pointer]:
+                  - /url: https://2gis.ru/moscow/inside/4504235282784871/firm/70000001062699761/tab/reviews?m=37.788281%2C55.609149%2F15.29
+                  - generic [ref=e211]: "2"
+                  - text: Отзыв из 2ГИС
+                  - img [ref=e212]
+              - article [ref=e215]:
+                - generic [ref=e216]:
+                  - generic [ref=e217]: СВ
+                  - generic [ref=e218]:
+                    - generic [ref=e219]:
+                      - generic [ref=e220]: Светлана В.
+                      - img "5 из 5 звёзд" [ref=e221]:
+                        - img [ref=e222]
+                        - img [ref=e224]
+                        - img [ref=e226]
+                        - img [ref=e228]
+                        - img [ref=e230]
+                    - paragraph [ref=e232]: 5 февраля 2026
+                - paragraph [ref=e233]: Нашла компанию в интернете, решила попробовать поддерживающую уборку. Клинер Анастасия пришла строго в оговорённое время, быстро и аккуратно всё убрала. Приятно, что она спросила, как обращаться с кожаным диваном — не стала чистить абы чем. Вернула нам подарочную карту на следующий заказ.
+                - link "Отзыв из Авито" [ref=e234] [cursor=pointer]:
+                  - /url: https://www.avito.ru/brands/i238669707/all/predlozheniya_uslug?sellerId=cc0c6151ce991c44f0bd7cb4cee1ebd4
+                  - generic [ref=e235]: А
+                  - text: Отзыв из Авито
+                  - img [ref=e236]
+              - article [ref=e239]:
+                - generic [ref=e240]:
+                  - generic [ref=e241]: НФ
+                  - generic [ref=e242]:
+                    - generic [ref=e243]:
+                      - generic [ref=e244]: Николай Ф.
+                      - img [ref=e245]:
+                        - img [ref=e246]
+                        - img [ref=e248]
+                        - img [ref=e250]
+                        - img [ref=e252]
+                        - img [ref=e254]
+                    - paragraph [ref=e256]: 11 февраля 2026
+                - paragraph [ref=e257]: Делали химчистку дивана и двух кресел. Специалист приехал с профессиональным оборудованием, объяснил, какие средства будет использовать. Через 4 часа мебель стала выглядеть как новая — пятно от кофе, которое я считал вечным, исчезло полностью. Цена полностью соответствует качеству.
+                - link [ref=e258] [cursor=pointer]:
+                  - /url: https://profi.ru/profile/AlmayevSV/#reviews-tab
+                  - generic [ref=e259]: P
+                  - text: Отзыв из Profi.ru
+                  - img [ref=e260]
+              - article [ref=e263]:
+                - generic [ref=e264]:
+                  - generic [ref=e265]: ЮМ
+                  - generic [ref=e266]:
+                    - generic [ref=e267]:
+                      - generic [ref=e268]: Юлия Морозова
+                      - img [ref=e269]:
+                        - img [ref=e270]
+                        - img [ref=e272]
+                        - img [ref=e274]
+                        - img [ref=e276]
+                        - img [ref=e278]
+                    - paragraph [ref=e280]: 18 февраля 2026
+                - paragraph [ref=e281]: Заказывала мойку окон — 12 штук в доме плюс лоджия. Мастер приехал с собственной телескопической щёткой и моющим раствором, справился за два часа. Окна кристально чистые, без разводов. Давно не видела такого результата. Цена за окно вполне адекватная, рекомендую.
+                - link [ref=e282] [cursor=pointer]:
+                  - /url: https://google.ru/maps/place/%D0%91%D0%BE%D0%BB%D1%8C%D1%88%D0%B0%D1%8F+%D0%A3%D0%B1%D0%BE%D1%80%D0%BA%D0%B0+%7C+%D0%9A%D0%BB%D0%B8%D0%BD%D0%B8%D0%BD%D0%B3%D0%BE%D0%B2%D0%B0%D1%8F+%D0%9A%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F/@55.6088923,37.7787591,17z/data=!4m6!3m5!1s0x414ab1e94a83c8d5:0x1c995507a5ecc417!8m2!3d55.6088893!4d37.781334!16s%2Fg%2F11tcpzr59j?entry=tts&shorturl=1
+                  - generic [ref=e283]: G
+                  - text: Отзыв из Google
+                  - img [ref=e284]
+              - article [ref=e287]:
+                - generic [ref=e288]:
+                  - generic [ref=e289]: АП
+                  - generic [ref=e290]:
+                    - generic [ref=e291]:
+                      - generic [ref=e292]: Алина и Павел
+                      - img [ref=e293]:
+                        - img [ref=e294]
+                        - img [ref=e296]
+                        - img [ref=e298]
+                        - img [ref=e300]
+                        - img [ref=e302]
+                    - paragraph [ref=e304]: 3 марта 2026
+                - paragraph [ref=e305]: "Обратились перед новосельем — квартира стояла пустой несколько месяцев после сдачи дома. Пришли два человека, работали слаженно: убрали строительный мусор с подоконников, вымыли шкафы внутри, оттёрли краску со стёкол, продезинфицировали санузел. Въехали в идеально чистую квартиру."
+                - link [ref=e306] [cursor=pointer]:
+                  - /url: https://yandex.com/profile/161532445525?intent=reviews&utm_source=qr&utm_medium=qr_image&utm_campaign=v1
+                  - generic [ref=e307]: Я
+                  - text: Отзыв из Яндекс
+                  - img [ref=e308]
+              - article [ref=e311]:
+                - generic [ref=e312]:
+                  - generic [ref=e313]: ТВ
+                  - generic [ref=e314]:
+                    - generic [ref=e315]:
+                      - generic [ref=e316]: Татьяна Воронова
+                      - img [ref=e317]:
+                        - img [ref=e318]
+                        - img [ref=e320]
+                        - img [ref=e322]
+                        - img [ref=e324]
+                        - img [ref=e326]
+                    - paragraph [ref=e328]: 7 марта 2026
+                - paragraph [ref=e329]: Брала услугу озонирования после того, как в квартире долго стоял запах сырости. Специалист объяснил весь процесс, провёл обработку, оставил помещение проветриться. На следующее утро запах ушёл полностью. Также посоветовал, как поддерживать результат. Профессиональный и вежливый подход.
+                - link [ref=e330] [cursor=pointer]:
+                  - /url: https://www.avito.ru/brands/i238669707/all/predlozheniya_uslug?sellerId=cc0c6151ce991c44f0bd7cb4cee1ebd4
+                  - generic [ref=e331]: А
+                  - text: Отзыв из Авито
+                  - img [ref=e332]
+              - article [ref=e335]:
+                - generic [ref=e336]:
+                  - generic [ref=e337]: ИС
+                  - generic [ref=e338]:
+                    - generic [ref=e339]:
+                      - generic [ref=e340]: Игорь С.
+                      - img [ref=e341]:
+                        - img [ref=e342]
+                        - img [ref=e344]
+                        - img [ref=e346]
+                        - img [ref=e348]
+                        - img [ref=e350]
+                    - paragraph [ref=e352]: 14 марта 2026
+                - paragraph [ref=e353]: "Нужна была срочная уборка на следующее утро после вечеринки. Оформил заявку поздно вечером — менеджер перезвонил через 10 минут, согласовали время и объём. Клинер пришла в 9 утра, за 3 часа навела полный порядок: вымыла полы, убрала посуду, вынесла мусор. Выручили, большое спасибо."
+                - link [ref=e354] [cursor=pointer]:
+                  - /url: https://2gis.ru/moscow/inside/4504235282784871/firm/70000001062699761/tab/reviews?m=37.788281%2C55.609149%2F15.29
+                  - generic [ref=e355]: "2"
+                  - text: Отзыв из 2ГИС
+                  - img [ref=e356]
+              - article [ref=e359]:
+                - generic [ref=e360]:
+                  - generic [ref=e361]: КБ
+                  - generic [ref=e362]:
+                    - generic [ref=e363]:
+                      - generic [ref=e364]: Константин Быков
+                      - img [ref=e365]:
+                        - img [ref=e366]
+                        - img [ref=e368]
+                        - img [ref=e370]
+                        - img [ref=e372]
+                        - img [ref=e374]
+                    - paragraph [ref=e376]: 21 марта 2026
+                - paragraph [ref=e377]: Регулярная уборка офиса каждые две недели. Команда приходит без напоминаний, всегда в назначенное время. За полгода ни разу не было замечания по качеству. Очень рекомендую как надёжного подрядчика для корпоративных клиентов.
+                - link [ref=e378] [cursor=pointer]:
+                  - /url: https://profi.ru/profile/AlmayevSV/#reviews-tab
+                  - generic [ref=e379]: P
+                  - text: Отзыв из Profi.ru
+                  - img [ref=e380]
+              - article [ref=e383]:
+                - generic [ref=e384]:
+                  - generic [ref=e385]: ОЗ
+                  - generic [ref=e386]:
+                    - generic [ref=e387]:
+                      - generic [ref=e388]: Ольга Захарова
+                      - img [ref=e389]:
+                        - img [ref=e390]
+                        - img [ref=e392]
+                        - img [ref=e394]
+                        - img [ref=e396]
+                        - img [ref=e398]
+                    - paragraph [ref=e400]: 28 марта 2026
+                - paragraph [ref=e401]: Заказала уборку перед важным мероприятием в нашем офисе. Команда из четырёх человек за три часа привела в порядок 300 м², включая конференц-зал и кухню. Всё сверкало. Гости были приятно удивлены. Оперативность и результат на высшем уровне.
+                - link [ref=e402] [cursor=pointer]:
+                  - /url: https://google.ru/maps/place/%D0%91%D0%BE%D0%BB%D1%8C%D1%88%D0%B0%D1%8F+%D0%A3%D0%B1%D0%BE%D1%80%D0%BA%D0%B0+%7C+%D0%9A%D0%BB%D0%B8%D0%BD%D0%B8%D0%BD%D0%B3%D0%BE%D0%B2%D0%B0%D1%8F+%D0%9A%D0%BE%D0%BC%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F/@55.6088923,37.7787591,17z/data=!4m6!3m5!1s0x414ab1e94a83c8d5:0x1c995507a5ecc417!8m2!3d55.6088893!4d37.781334!16s%2Fg%2F11tcpzr59j?entry=tts&shorturl=1
+                  - generic [ref=e403]: G
+                  - text: Отзыв из Google
+                  - img [ref=e404]
+          - generic [ref=e406]:
+            - button "Предыдущие отзывы" [disabled] [ref=e407]:
+              - img [ref=e408]
+            - group "Страницы отзывов" [ref=e410]:
+              - button "Страница 1" [ref=e411] [cursor=pointer]
+              - button "Страница 2" [ref=e413] [cursor=pointer]
+              - button "Страница 3" [ref=e415] [cursor=pointer]
+              - button "Страница 4" [ref=e417] [cursor=pointer]
+            - button "Следующие отзывы" [ref=e419] [cursor=pointer]:
+              - img [ref=e420]
+      - generic [ref=e423]:
+        - heading "Видеоотзывы" [level=2] [ref=e424]
+        - generic [ref=e425]:
+          - generic [ref=e426]:
+            - generic "Отзыв от Людмилы" [ref=e427]
+            - paragraph [ref=e428]: Отзыв от Людмилы
+          - generic [ref=e429]:
+            - generic "Отзыв от Маргариты" [ref=e430]
+            - paragraph [ref=e431]: Отзыв от Маргариты
+          - generic [ref=e432]:
+            - generic "Отзыв от Ольги" [ref=e433]
+            - paragraph [ref=e434]: Отзыв от Ольги
+      - generic [ref=e436]:
+        - heading "Наша команда" [level=2] [ref=e437]
+        - generic [ref=e438]:
+          - generic [ref=e439]:
+            - img "Ирина Григорьева" [ref=e441]
+            - paragraph [ref=e442]: Ирина Григорьева
+            - paragraph [ref=e443]: Клинер
+          - generic [ref=e444]:
+            - img "Галина Кравченко" [ref=e446]
+            - paragraph [ref=e447]: Галина Кравченко
+            - paragraph [ref=e448]: Клинер
+          - generic [ref=e449]:
+            - img "Инга Юдина" [ref=e451]
+            - paragraph [ref=e452]: Инга Юдина
+            - paragraph [ref=e453]: Клинер
+          - generic [ref=e454]:
+            - img "Мария Смирнова" [ref=e456]
+            - paragraph [ref=e457]: Мария Смирнова
+            - paragraph [ref=e458]: Клинер
+          - generic [ref=e459]:
+            - img "Светлана Нестерова" [ref=e461]
+            - paragraph [ref=e462]: Светлана Нестерова
+            - paragraph [ref=e463]: Клинер
+      - generic [ref=e465]:
+        - heading "Процесс уборки" [level=2] [ref=e466]
+        - generic [ref=e467]:
+          - generic [ref=e468]:
+            - generic [ref=e469]:
+              - generic [ref=e470]: "1"
+              - heading "Заявка и оценка" [level=3] [ref=e471]
+            - paragraph [ref=e472]: Клиент связывается с компанией «Большая Уборка» для подачи заявки, где обсуждаются детали уборки, такие как тип услуги, площадь и желаемое время. Специалист проводит оценку и предоставляет информацию о стоимости и условиях.
+          - generic [ref=e473]:
+            - generic [ref=e474]:
+              - generic [ref=e475]: "2"
+              - heading "Уборка" [level=3] [ref=e476]
+            - paragraph [ref=e477]: После согласования всех деталей клиент подготавливает помещение, а команда компании собирает необходимое оборудование и моющие средства. Затем специалисты проводят уборку, тщательно очищая все поверхности и уделяя внимание каждому уголку.
+          - generic [ref=e478]:
+            - generic [ref=e479]:
+              - generic [ref=e480]: "3"
+              - heading "Контроль качества и оплата" [level=3] [ref=e481]
+            - paragraph [ref=e482]: По завершении уборки клиент проверяет результат, после чего осуществляется расчёт за выполненные работы.
+      - generic [ref=e484]:
+        - heading "Ответы на частые вопросы" [level=2] [ref=e485]
+        - generic [ref=e487]:
+          - generic [ref=e488]:
+            - button "Какие гарантии вы предоставляете на услуги уборки?" [ref=e489] [cursor=pointer]:
+              - generic [ref=e490]: Какие гарантии вы предоставляете на услуги уборки?
+              - img [ref=e491]
+            - generic [ref=e493]: Мы предоставляем полную ответственность за ваше имущество во время уборки. Наша компания работает на законных основаниях, и вы защищены как потребитель. Кроме того, оплата производится только после проверки качества работы.
+          - generic [ref=e494]:
+            - button "Как происходит оплата услуг?" [ref=e495] [cursor=pointer]:
+              - generic [ref=e496]: Как происходит оплата услуг?
+              - img [ref=e497]
+            - generic [ref=e499]: "Оплата производится по окончании работ, после проверки заказчиком. Мы принимаем любые формы оплаты: наличные, банковские карты, переводы на расчётный счёт."
+          - generic [ref=e500]:
+            - button "Кто будет проводить уборку?" [ref=e501] [cursor=pointer]:
+              - generic [ref=e502]: Кто будет проводить уборку?
+              - img [ref=e503]
+            - generic [ref=e505]: У нас работают только проверенные клинеры с легальными документами и опытом от 3 лет. Все наши сотрудники – славяне, готовые к выезду в любое время.
+          - generic [ref=e506]:
+            - button "Изменяется ли цена после согласования?" [ref=e507] [cursor=pointer]:
+              - generic [ref=e508]: Изменяется ли цена после согласования?
+              - img [ref=e509]
+            - generic [ref=e511]: Озвученная цена не изменится в процессе уборки. Мы гарантируем прозрачность и честность в расчётах.
+          - generic [ref=e512]:
+            - button "Предоставляете ли вы предварительную оценку стоимости услуг?" [ref=e513] [cursor=pointer]:
+              - generic [ref=e514]: Предоставляете ли вы предварительную оценку стоимости услуг?
+              - img [ref=e515]
+            - generic [ref=e517]: Да, мы предлагаем бесплатный выезд специалиста на объект для оценки объёма работ и составления коммерческого предложения с подробным перечнем услуг и понятными ценами.
+          - generic [ref=e518]:
+            - button "Как вы обеспечиваете безопасность на объекте?" [ref=e519] [cursor=pointer]:
+              - generic [ref=e520]: Как вы обеспечиваете безопасность на объекте?
+              - img [ref=e521]
+            - generic [ref=e523]: Мы строго соблюдаем технику безопасности на объектах, за этим следит ответственный контролёр. Кроме того, наша компания несёт полную ответственность за ваше имущество.
+          - generic [ref=e524]:
+            - button "Можете ли вы предоставить услуги высотных работ?" [ref=e525] [cursor=pointer]:
+              - generic [ref=e526]: Можете ли вы предоставить услуги высотных работ?
+              - img [ref=e527]
+            - generic [ref=e529]: Да, в нашей команде есть своя бригада альпинистов-высотников, которые могут выполнить любые работы на высоте.
+          - generic [ref=e530]:
+            - button "Работаете ли вы с юридическими лицами?" [ref=e531] [cursor=pointer]:
+              - generic [ref=e532]: Работаете ли вы с юридическими лицами?
+              - img [ref=e533]
+            - generic [ref=e535]: Мы работаем как с физическими, так и с юридическими лицами, и заключаем договоры на постоянной основе, что обеспечивает стабильное и качественное обслуживание.
+      - generic [ref=e537]:
+        - heading "Фото с места" [level=2] [ref=e538]
+        - generic [ref=e539]:
+          - button "Предыдущее фото" [ref=e540] [cursor=pointer]: ‹
+          - generic [ref=e542]:
+            - img "Уборка — фото 4" [ref=e545]
+            - img "Уборка — фото 5" [ref=e548]
+            - img "Уборка — фото 1" [ref=e551]
+            - img "Уборка — фото 2" [ref=e554]
+            - img "После ремонта" [ref=e557]
+            - img "Уборка — фото 4" [ref=e560]
+            - img "Уборка — фото 5" [ref=e563]
+            - img "Уборка — фото 1" [ref=e566]
+            - img "Уборка — фото 2" [ref=e569]
+          - button "Следующее фото" [ref=e570] [cursor=pointer]: ›
+        - group "Слайды" [ref=e571]:
+          - button "Фото 1" [ref=e572] [cursor=pointer]
+          - button "Фото 2" [ref=e574] [cursor=pointer]
+          - button "Фото 3" [ref=e576] [cursor=pointer]
+          - button "Фото 4" [ref=e578] [cursor=pointer]
+          - button "Фото 5" [ref=e580] [cursor=pointer]
+        - heading "Видео с нами" [level=2] [ref=e582]
+        - generic [ref=e583]:
+          - generic [ref=e584]:
+            - generic "Видео с нами — 1" [ref=e585]
+            - button "Запустить видео" [ref=e586] [cursor=pointer]:
+              - img [ref=e588]
+          - generic [ref=e590]:
+            - generic "Видео с нами — 2" [ref=e591]
+            - button "Запустить видео" [ref=e592] [cursor=pointer]:
+              - img [ref=e594]
+        - heading "Выполненные работы" [level=2] [ref=e596]
+        - generic [ref=e599]:
+          - img "Уборка на кухне ресторана" [ref=e601]
+          - generic [ref=e602]:
+            - heading "Уборка на кухне ресторана" [level=3] [ref=e603]
+            - paragraph [ref=e604]: Профессиональная уборка помещений ресторана. Глубокая чистка кухонного оборудования, пола и поверхностей — результат гарантирован.
+            - link "Читать далее" [ref=e605] [cursor=pointer]:
+              - /url: /uslugi/uborka-kafe/
+      - generic [ref=e608]:
+        - heading "Остались вопросы?" [level=2] [ref=e609]
+        - paragraph [ref=e610]: Оставьте свои контакты и наш менеджер свяжется с вами!
+        - generic [ref=e612]:
+          - textbox [ref=e613]
+          - generic [ref=e614]:
+            - generic [ref=e615]:
+              - text: Имя *
+              - textbox "Имя *" [ref=e616]:
+                - /placeholder: Иван
+            - generic [ref=e617]:
+              - text: Телефон *
+              - textbox "Телефон *" [ref=e618]:
+                - /placeholder: +7 (999) 123-45-67
+          - generic [ref=e619]:
+            - text: Адрес
+            - textbox "Адрес" [ref=e620]:
+              - /placeholder: Город, улица, дом
+          - generic [ref=e621]:
+            - generic [ref=e622]:
+              - text: Желаемая дата
+              - textbox "Желаемая дата" [ref=e623]
+            - generic [ref=e624]:
+              - text: Время
+              - textbox "Время" [ref=e625]
+          - generic [ref=e626]:
+            - text: Тип услуги
+            - textbox "Тип услуги" [ref=e627]:
+              - /placeholder: "Например: генеральная уборка квартиры"
+          - button "Отправить заявку" [ref=e628] [cursor=pointer]
+  - contentinfo [ref=e629]:
+    - generic [ref=e630]:
+      - generic [ref=e631]:
+        - generic [ref=e632]:
+          - paragraph [ref=e633]: Большая Уборка
+          - paragraph [ref=e634]: Профессиональная уборка для частных лиц и организаций. Москва и Московская область.
+          - paragraph [ref=e635]: 8 (995) 797-99-96
+          - paragraph [ref=e636]: Круглосуточно
+        - generic [ref=e637]:
+          - paragraph [ref=e638]: Частным клиентам
+          - list [ref=e639]:
+            - listitem [ref=e640]:
+              - link "Услуги для частных лиц" [ref=e641] [cursor=pointer]:
+                - /url: /private/
+            - listitem [ref=e642]:
+              - link "Квартира" [ref=e643] [cursor=pointer]:
+                - /url: /private/apartment/
+            - listitem [ref=e644]:
+              - link "Дом/коттедж" [ref=e645] [cursor=pointer]:
+                - /url: /private/house/
+            - listitem [ref=e646]:
+              - link "Мойка окон" [ref=e647] [cursor=pointer]:
+                - /url: /private/window-wash/
+            - listitem [ref=e648]:
+              - link "Химчистка" [ref=e649] [cursor=pointer]:
+                - /url: /private/dry-cleaning/
+            - listitem [ref=e650]:
+              - link "Озонирование" [ref=e651] [cursor=pointer]:
+                - /url: /services/ozonation/
+            - listitem [ref=e652]:
+              - link "Удаление запахов" [ref=e653] [cursor=pointer]:
+                - /url: /services/odor-removal/
+            - listitem [ref=e654]:
+              - link "Дезинфекция" [ref=e655] [cursor=pointer]:
+                - /url: /services/disinfection/
+        - generic [ref=e656]:
+          - paragraph [ref=e657]: Для бизнеса
+          - generic [ref=e658]:
+            - list [ref=e659]:
+              - listitem [ref=e660]:
+                - link "Услуги для бизнеса" [ref=e661] [cursor=pointer]:
+                  - /url: /business/
+              - listitem [ref=e662]:
+                - link "Офис" [ref=e663] [cursor=pointer]:
+                  - /url: /business/office/
+              - listitem [ref=e664]:
+                - link "Склад" [ref=e665] [cursor=pointer]:
+                  - /url: /business/warehouse/
+              - listitem [ref=e666]:
+                - link "Фасады/вывески" [ref=e667] [cursor=pointer]:
+                  - /url: /business/facades/
+              - listitem [ref=e668]:
+                - link "Производство/цех" [ref=e669] [cursor=pointer]:
+                  - /url: /business/production/
+              - listitem [ref=e670]:
+                - link "Окна/альпинизм" [ref=e671] [cursor=pointer]:
+                  - /url: /business/windows-climbing/
+              - listitem [ref=e672]:
+                - link "ЖК/подъезд" [ref=e673] [cursor=pointer]:
+                  - /url: /business/residential-complex/
+              - listitem [ref=e674]:
+                - link "Магазин/шоу-рум" [ref=e675] [cursor=pointer]:
+                  - /url: /business/store/
+              - listitem [ref=e676]:
+                - link "Кафе/ресторан" [ref=e677] [cursor=pointer]:
+                  - /url: /business/cafe/
+              - listitem [ref=e678]:
+                - link "Парковка" [ref=e679] [cursor=pointer]:
+                  - /url: /business/parking/
+              - listitem [ref=e680]:
+                - link "Бассейн/фонтан" [ref=e681] [cursor=pointer]:
+                  - /url: /business/pool-fountain/
+              - listitem [ref=e682]:
+                - link "Школа/детсад" [ref=e683] [cursor=pointer]:
+                  - /url: /business/school/
+              - listitem [ref=e684]:
+                - link "Поликлиника/больница" [ref=e685] [cursor=pointer]:
+                  - /url: /business/clinic/
+            - list [ref=e686]:
+              - listitem [ref=e687]:
+                - link "Автосервис/автосалон" [ref=e688] [cursor=pointer]:
+                  - /url: /business/car-service/
+              - listitem [ref=e689]:
+                - link "Торговый центр/бизнес центр" [ref=e690] [cursor=pointer]:
+                  - /url: /business/mall/
+              - listitem [ref=e691]:
+                - link "Фитнес клуб" [ref=e692] [cursor=pointer]:
+                  - /url: /business/fitness/
+              - listitem [ref=e693]:
+                - link "Гостиница/отель" [ref=e694] [cursor=pointer]:
+                  - /url: /business/hotel/
+              - listitem [ref=e695]:
+                - link "Химчистка" [ref=e696] [cursor=pointer]:
+                  - /url: /business/dry-cleaning/
+              - listitem [ref=e697]:
+                - link "Удаление запахов" [ref=e698] [cursor=pointer]:
+                  - /url: /business/odor-removal/
+              - listitem [ref=e699]:
+                - link "Озонирование" [ref=e700] [cursor=pointer]:
+                  - /url: /business/ozonation/
+              - listitem [ref=e701]:
+                - link "Дезинфекция" [ref=e702] [cursor=pointer]:
+                  - /url: /business/disinfection/
+              - listitem [ref=e703]:
+                - link "Салон красоты/парикмахерская" [ref=e704] [cursor=pointer]:
+                  - /url: /business/salon/
+              - listitem [ref=e705]:
+                - link "Административное здание" [ref=e706] [cursor=pointer]:
+                  - /url: /business/administrative/
+              - listitem [ref=e707]:
+                - link "Развлекательное учреждение" [ref=e708] [cursor=pointer]:
+                  - /url: /business/entertainment/
+              - listitem [ref=e709]:
+                - link "Другие нежилые помещения" [ref=e710] [cursor=pointer]:
+                  - /url: /business/other/
+        - generic [ref=e711]:
+          - paragraph [ref=e712]: Контакты
+          - list [ref=e713]:
+            - listitem [ref=e714]:
+              - link "+7 (995) 797-99-96" [ref=e715] [cursor=pointer]:
+                - /url: tel:79957979996
+            - listitem [ref=e716]:
+              - link "biguborka@yandex.ru" [ref=e717] [cursor=pointer]:
+                - /url: mailto:biguborka@yandex.ru
+            - listitem [ref=e718]:
+              - link "WhatsApp" [ref=e719] [cursor=pointer]:
+                - /url: https://wa.me/79957979996
+              - link "VK" [ref=e720] [cursor=pointer]:
+                - /url: "#"
+                - text: Vk
+              - link "Telegram" [ref=e721] [cursor=pointer]:
+                - /url: "#"
+      - generic [ref=e722]:
+        - paragraph [ref=e723]: © 2026 Большая Уборка. Все права защищены.
+        - generic [ref=e724]:
+          - link "Вакансии" [ref=e725] [cursor=pointer]:
+            - /url: /vacancies/
+          - link "Контакты" [ref=e726] [cursor=pointer]:
+            - /url: /contacts/
+          - link "Политика конфиденциальности" [ref=e727] [cursor=pointer]:
+            - /url: /privacy/
+  - alert [ref=e728]
+```

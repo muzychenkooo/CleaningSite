@@ -1,0 +1,128 @@
+---
+description: Visual and content parity with bigyborka.ru — mirror reference structure and content, modernize UI/UX
+alwaysApply: true
+---
+
+========================
+VISUAL + CONTENT PARITY (NON-NEGOTIABLE)
+========================
+
+Target reference (the site to mirror): `https://bigyborka.ru/`
+
+GOAL:
+Build a site that is **pixel-close and content-identical in structure** to the reference, but **modernized**. The finished product must feel like "the same site, same brand, same offers", just upgraded for 2026.
+
+HARD REQUIREMENTS:
+1) **Pixel-close parity**:
+   - Mirror the reference site's information architecture, page list, section order, layout composition, and component types.
+   - Keep the same navigation items, anchors, and the same "what goes where" on every page/section.
+   - Match spacing, rhythm, and visual hierarchy closely (typography scale can be improved, but proportions must remain recognizable).
+
+2) **Brand fidelity**:
+   - Preserve corporate colors (primary/secondary/accent), typography vibe, icon style direction, and overall tone.
+   - Preserve all texts, UTPs, offers, pricing blocks, guarantees, and CTA labels in meaning. Rephrase only if it improves clarity, but do not change claims.
+
+3) **Modernize everything (without changing what it is)**:
+   - Upgrade UI polish (better grid, consistent components, modern buttons/cards, improved mobile).
+   - Upgrade UX (sticky mobile CTA, better forms, clearer calculator, better feedback states).
+   - Upgrade accessibility, performance, SEO, and code quality.
+
+4) **No "creative redesign"**:
+   - Do NOT invent new sections, remove existing sections, or reorder major blocks.
+   - Do NOT change the product positioning or marketing message.
+   - Do NOT swap the layout concept; only refine and modernize within the same structure.
+
+5) **Exact content coverage**:
+   - If a page/section exists on `https://bigyborka.ru/`, it must exist in the rebuilt site, upgraded.
+   - No placeholders, no missing pages, no broken links.
+
+IMPLEMENTATION METHOD (MANDATORY):
+- During discovery, open the reference site and create a **parity checklist**: pages → sections → key elements (headline, bullets, CTAs, forms, pricing, FAQ, contacts).
+- Implement each page by checking off items until the page is fully matched + improved.
+- Validate responsiveness for the same breakpoints as the reference (mobile/tablet/desktop).
+- Preserve routing/URL structure where possible; add redirects if changed.
+
+DEFINITION OF DONE:
+- A user familiar with `https://bigyborka.ru/` says: "Это тот же сайт, только намного современнее, быстрее и удобнее", and can find every section in the same place.
+
+========================================
+QUIZ (NOT CALCULATOR) — PRIMARY CTA REWORK
+========================================
+
+The primary CTA must NOT be "calculator-style cost estimate". It must be a **multi-step quiz** (квиз) that feels premium and drives conversions.
+
+GOAL:
+Replace the current "Рассчитать стоимость/цену" flow with a **high-quality quiz** that:
+- increases lead conversion,
+- feels like a product (premium UI, smooth steps),
+- still preserves the business meaning from the reference site `https://bigyborka.ru/` (don't invent claims),
+- outputs a clear "result" screen + lead capture.
+
+HARD REQUIREMENTS:
+1) **Kviz UX (multi-step)**
+   - 5–8 steps max, each step simple and fast.
+   - Stepper with progress (e.g. "Шаг 2 из 6"), plus back button.
+   - Autosave selections between steps.
+   - Instant validation + helpful microcopy.
+
+2) **Lead capture is part of the flow**
+   - Final step collects: name + phone (+ optional address/time).
+   - Add consent checkbox text if required by RU practice (do not invent legal text; reuse/derive from existing legal blocks).
+   - Show success screen with next steps ("Менеджер свяжется…") and a clear CTA.
+
+3) **Questions must match cleaning domain and the reference offer**
+   Build the quiz questions based on what exists on `https://bigyborka.ru/` services/price logic and wording.
+   If exact logic is unclear, infer minimally from the site structure and keep it configurable.
+
+   Recommended steps (adapt to reference):
+   - Step 1: Тип уборки (Квартира / Дом / Офис / После ремонта / Мойка окон)
+   - Step 2: Площадь (slider or input with presets)
+   - Step 3: Кол-во комнат / санузлов (if relevant)
+   - Step 4: Доп. услуги (checkbox grid: холодильник, духовка, балкон и т.д. — only if these exist on reference)
+   - Step 5: Срочность / дата-время (optional)
+   - Step 6: Контакты (имя/телефон) + согласие
+
+4) **Result screen**
+   - Present either:
+     - "Ориентировочная стоимость: …" (if you have a safe formula), OR
+     - "Подготовим точную смету за 5–10 минут" + show selected parameters
+   - Do NOT invent numbers. If formulas/data exist in repo or on reference site — use them. Otherwise show a range or "уточним по телефону".
+
+5) **Premium UI**
+   - Wide layout (matches global `Container` width).
+   - Two-column on desktop:
+     - left: steps/questions
+     - right: sticky "summary card" with chosen params + trust badges
+   - Mobile: single column, sticky bottom "Далее" button.
+   - Strong visuals: cards, icons, subtle shadows, clean spacing.
+   - Animations: step transitions (fade/slide), button press, focus rings.
+   - Respect `prefers-reduced-motion`.
+
+6) **Reliability + a11y**
+   - Keyboard accessible, proper labels/aria.
+   - No layout shifts when switching steps.
+   - Form validation with clear messages.
+   - No overlapping text anywhere.
+
+7) **Integration**
+   - The CTA buttons in header/hero ("Рассчитать цену/стоимость") must open the quiz:
+     - Desktop: modal dialog OR dedicated `/quiz` page (prefer `/quiz` for SEO + shareable link)
+     - Mobile: full-screen Drawer/Sheet or page route
+   - Add analytics hooks (events) but don't hardcode IDs unless present.
+   - Anti-spam: honeypot + time-based submit guard; add rate limit if server exists.
+
+IMPLEMENTATION NOTES (MANDATORY):
+- Centralize quiz config in one place (so it's editable):
+  - `data/quiz.ts` for steps/options/microcopy
+  - `lib/quiz/*` for validation + (optional) price/range logic
+- UI components:
+  - `components/quiz/QuizWizard`
+  - `components/quiz/QuizStep*`
+  - `components/quiz/QuizSummaryCard`
+- Ensure quiz uses the same width system and design tokens as the site.
+
+DEFINITION OF DONE:
+- The primary CTA opens a premium multi-step quiz (not a calculator form).
+- The quiz is stable, responsive, accessible, and "wow".
+- No overlaps/clipping.
+- Lead submission flow works end-to-end with success state.
