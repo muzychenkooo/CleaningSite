@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function CasesPage() {
   return (
-    <div className="py-12 sm:py-20">
+    <div className="py-8 sm:py-16">
       <Container>
         <Breadcrumbs items={[{ label: 'Главная', href: '/' }, { label: 'Примеры работ' }]} />
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">

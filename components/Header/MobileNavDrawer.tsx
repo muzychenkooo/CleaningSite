@@ -1,10 +1,19 @@
 'use client';
 
 import * as React from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { site } from '@/data/site';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
+function isActive(pathname: string, href: string, prefixMatch = false): boolean {
+  const path = pathname.endsWith('/') ? pathname : pathname + '/';
+  const base = href.endsWith('/') ? href : href + '/';
+  if (prefixMatch) return path === base || path.startsWith(base);
+  return path === base;
+}
 
 type Props = {
   open: boolean;
@@ -16,8 +25,20 @@ type Props = {
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+const navLinkBase = 'block rounded-md px-3 py-2 font-medium transition-colors';
+const navLinkInactive = 'text-slate-700 hover:bg-slate-100 hover:text-primary-600';
+const navLinkActive = 'bg-primary-50 text-primary-700 ring-1 ring-primary-100';
+
 export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
   const drawerRef = React.useRef<HTMLDivElement>(null);
+  const pathname = usePathname() ?? '';
+  const scrollYRef = React.useRef(0);
+  const [mounted, setMounted] = React.useState(false);
+
+  // Ensure we only access document in the browser
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // ESC to close
   React.useEffect(() => {
@@ -29,15 +50,34 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  // Body scroll lock
+  // Body scroll lock (iOS-safe on mobile/tablet): fix body, store scroll position, restore on close
   React.useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    if (!open) return;
+
+    // Apply only when burger is actually visible (< 1280px, matches xl:hidden)
+    if (window.innerWidth >= 1280) return;
+
+    const { body, documentElement: html } = document;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    scrollYRef.current = scrollY;
+
+    const prevHtmlOverflow = html.style.overflow;
+    const prevPosition = body.style.position;
+    const prevTop = body.style.top;
+    const prevWidth = body.style.width;
+
+    html.style.overflow = 'hidden';
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.width = '100%';
+
     return () => {
-      document.body.style.overflow = '';
+      html.style.overflow = prevHtmlOverflow;
+      body.style.position = prevPosition;
+      body.style.top = prevTop;
+      body.style.width = prevWidth;
+      window.scrollTo(0, scrollYRef.current);
     };
   }, [open]);
 
@@ -47,7 +87,7 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
     const drawer = drawerRef.current;
     if (!drawer) return;
 
-    // Move focus into the drawer
+    // Move focus into the drawer dialog
     const focusables = Array.from(drawer.querySelectorAll<HTMLElement>(FOCUSABLE));
     if (focusables.length) focusables[0].focus();
 
@@ -73,92 +113,122 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
     return () => window.removeEventListener('keydown', handleTab);
   }, [open]);
 
-  return (
+  // On server or before mount we render nothing (portal needs document)
+  if (!mounted || typeof document === 'undefined') {
+    return null;
+  }
+
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
         className={cn(
-          'fixed inset-0 z-40 bg-black/30 transition-opacity xl:hidden',
-          open ? 'opacity-100' : 'pointer-events-none opacity-0'
+          'mobileMenuOverlay fixed inset-0 z-[55] bg-black/80 transition-opacity duration-200 ease-out xl:hidden',
+          open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         )}
-        aria-hidden
         onClick={onClose}
+        aria-hidden
       />
 
-      {/* Drawer */}
+      {/* Modal dialog wrapper (mobile only) */}
       <div
-        ref={drawerRef}
         id="mobile-nav-drawer"
         className={cn(
-          'fixed right-0 top-0 z-50 flex w-80 max-w-[85vw] flex-col border-l border-slate-200 bg-white shadow-xl transition-transform duration-200 ease-out xl:hidden',
-          open ? 'translate-x-0' : 'translate-x-full'
+          'mobileMenuModal fixed inset-0 z-[60] flex min-h-screen items-center justify-center px-4 xl:hidden',
+          open ? 'pointer-events-auto' : 'pointer-events-none'
         )}
-        style={{ height: '100dvh' }}
         role="dialog"
         aria-modal="true"
         aria-label="Меню"
       >
-        {/* Drawer header */}
-        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-4 py-3">
-          <span className="font-semibold text-slate-900">Меню</span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
-            aria-label="Закрыть меню"
-          >
-            <span aria-hidden>✕</span>
-          </button>
-        </div>
-
-        {/* Scrollable nav body */}
-        <div className="flex flex-1 flex-col overflow-y-auto p-3">
-          {/* Primary links */}
-          <Link
-            href="/private/"
-            className="block rounded-md px-3 py-2 font-semibold text-slate-900 hover:bg-slate-100 hover:text-primary-600"
-            onClick={onClose}
-          >
-            Частным клиентам
-          </Link>
-          <Link
-            href="/business/"
-            className="block rounded-md px-3 py-2 font-semibold text-slate-900 hover:bg-slate-100 hover:text-primary-600"
-            onClick={onClose}
-          >
-            Для бизнеса
-          </Link>
-
-          <hr className="my-2 border-slate-200" />
-
-          {/* Other nav links */}
-          {site.nav.main.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 hover:text-primary-600"
+        {/* Centered dialog */}
+        <div
+          ref={drawerRef}
+          className={cn(
+            'mobileMenuDialog relative flex max-h-[80vh] w-full max-w-[420px] flex-col rounded-2xl bg-white shadow-xl transition-transform transition-opacity duration-200 ease-out',
+            open ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          )}
+        >
+          {/* Dialog header */}
+          <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-4 py-3">
+            <span className="font-semibold text-slate-900">Меню</span>
+            <button
+              type="button"
               onClick={onClose}
+              className="mobileMenuClose inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+              aria-label="Закрыть меню"
             >
-              {item.label}
+              <span aria-hidden>✕</span>
+            </button>
+          </div>
+
+          {/* Scrollable nav body */}
+          <div className="mobileMenuContent flex flex-1 flex-col overflow-y-auto p-3">
+            {/* Primary links */}
+            <Link
+              href="/private/"
+              className={cn(
+                navLinkBase,
+                'font-semibold',
+                isActive(pathname, '/private/', true) ? navLinkActive : 'text-slate-900 hover:bg-slate-100 hover:text-primary-600'
+              )}
+              onClick={onClose}
+              aria-current={isActive(pathname, '/private/', true) ? 'page' : undefined}
+            >
+              Частным клиентам
             </Link>
-          ))}
-
-          <hr className="my-2 border-slate-200" />
-
-          <a
-            href={`tel:${site.phoneRaw}`}
-            className="block rounded-md px-3 py-2 font-medium text-primary-600 hover:bg-slate-50"
-          >
-            {phoneDisplay}
-          </a>
-
-          <Button asChild className="mt-3">
-            <Link href="/?open=quiz#rasschet" onClick={onClose}>
-              {site.cta.calculate}
+            <Link
+              href="/business/"
+              className={cn(
+                navLinkBase,
+                'font-semibold',
+                isActive(pathname, '/business/', true) ? navLinkActive : 'text-slate-900 hover:bg-slate-100 hover:text-primary-600'
+              )}
+              onClick={onClose}
+              aria-current={isActive(pathname, '/business/', true) ? 'page' : undefined}
+            >
+              Для бизнеса
             </Link>
-          </Button>
+
+            <hr className="my-2 border-slate-200" />
+
+            {/* Other nav links */}
+            {site.nav.main.map((item) => {
+              const active = isActive(pathname, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    navLinkBase,
+                    active ? navLinkActive : navLinkInactive
+                  )}
+                  onClick={onClose}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+
+            <hr className="my-2 border-slate-200" />
+
+            <a
+              href={`tel:${site.phoneRaw}`}
+              className="block rounded-md px-3 py-2 font-medium text-primary-600 hover:bg-slate-50"
+            >
+              {phoneDisplay}
+            </a>
+
+            <Button asChild className="mt-3">
+              <Link href="/?open=quiz#rasschet" onClick={onClose}>
+                {site.cta.calculate}
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }

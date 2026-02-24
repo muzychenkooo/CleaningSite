@@ -63,6 +63,24 @@ export function GallerySection() {
   const { extended: EXTENDED, clone: CLONE } = buildExtended(visibleCount);
   const EXT_LEN = EXTENDED.length;
 
+  const touchX = React.useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchX.current = e.touches[0]?.clientX ?? 0;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const endX = e.changedTouches[0]?.clientX ?? 0;
+    const diff = touchX.current - endX;
+    if (Math.abs(diff) > 48) {
+      if (diff > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+  };
+
   // Sync responsive visible count and reset carousel on breakpoint change
   React.useEffect(() => {
     function update() {
@@ -182,20 +200,13 @@ export function GallerySection() {
           Фото с места
         </h2>
 
-        <div className="mt-6 flex items-center gap-3 sm:gap-4">
-          {/* Prev */}
-          <button
-            type="button"
-            onClick={handlePrev}
-            disabled={busy}
-            aria-label="Предыдущее фото"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-lg select-none"
+        <div className="mt-6 relative">
+          {/* Viewport — занимает почти всю ширину; стрелки поверх */}
+          <div
+            className="mx-10 sm:mx-12 overflow-hidden touch-pan-y"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
-            ‹
-          </button>
-
-          {/* Viewport — clips the extended track */}
-          <div className="flex-1 overflow-hidden">
             <div
               style={trackStyle}
               onTransitionEnd={handleTransitionEnd}
@@ -207,13 +218,13 @@ export function GallerySection() {
                   style={{ width: `${(1 / EXT_LEN) * 100}%` }}
                   className="shrink-0 px-1 sm:px-2"
                 >
-                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-slate-200 shadow-sm">
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-200 shadow-sm">
                     <Image
                       src={assetUrl(photo.src)}
                       alt={photo.alt}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 639px) 95vw, 50vw"
+                      sizes="(max-width: 639px) 100vw, 60vw"
                       loading="lazy"
                     />
                   </div>
@@ -222,38 +233,66 @@ export function GallerySection() {
             </div>
           </div>
 
+          {/* Prev */}
+          <button
+            type="button"
+            onClick={handlePrev}
+            disabled={busy}
+            aria-label="Предыдущее фото"
+            className="carousel-arrow absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-base sm:text-lg select-none"
+          >
+            ‹
+          </button>
+
           {/* Next */}
           <button
             type="button"
             onClick={handleNext}
             disabled={busy}
             aria-label="Следующее фото"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-lg select-none"
+            className="carousel-arrow absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-base sm:text-lg select-none"
           >
             ›
           </button>
         </div>
 
-        {/* Dots */}
+        {/* Dots (windowed, чтобы не выезжали за экран) */}
         <div className="mt-4 flex justify-center gap-1" role="group" aria-label="Слайды">
-          {galleryPhotos.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => handleDotClick(i)}
-              aria-label={`Фото ${i + 1}`}
-              aria-current={i === logicalIndex ? 'true' : undefined}
-              className="flex h-6 w-6 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded"
-            >
-              <span
-                className={`block rounded-full transition-all duration-300 ${
-                  i === logicalIndex
-                    ? 'h-2 w-6 bg-primary-600'
-                    : 'h-2 w-2 bg-slate-300 hover:bg-slate-400'
-                }`}
-              />
-            </button>
-          ))}
+          {(() => {
+            const MAX_DOTS = 7;
+            let start = 0;
+            let end = TOTAL - 1;
+            if (TOTAL > MAX_DOTS) {
+              const half = Math.floor(MAX_DOTS / 2);
+              start = Math.max(0, logicalIndex - half);
+              end = start + MAX_DOTS - 1;
+              if (end >= TOTAL) {
+                end = TOTAL - 1;
+                start = end - MAX_DOTS + 1;
+              }
+            }
+            return Array.from({ length: end - start + 1 }).map((_, idx) => {
+              const i = start + idx;
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => handleDotClick(i)}
+                  aria-label={`Фото ${i + 1}`}
+                  aria-current={i === logicalIndex ? 'true' : undefined}
+                  className="flex h-6 w-6 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded"
+                >
+                  <span
+                    className={`block rounded-full transition-all duration-300 ${
+                      i === logicalIndex
+                        ? 'h-2 w-6 bg-primary-600'
+                        : 'h-2 w-2 bg-slate-300 hover:bg-slate-400'
+                    }`}
+                  />
+                </button>
+              );
+            });
+          })()}
         </div>
 
         {/* ── Видео с нами ── */}

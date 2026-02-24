@@ -1,26 +1,18 @@
 'use client';
 
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { trackFormSubmit } from '@/lib/analytics';
-
-const schema = z.object({
-  name: z.string().min(2, 'Введите имя'),
-  phone: z.string().min(10, 'Введите корректный телефон'),
-  address: z.string().optional(),
-  date: z.string().optional(),
-  time: z.string().optional(),
-  serviceType: z.string().optional(),
-  honeypot: z.string().max(0).optional(),
-});
-
-type FormData = z.infer<typeof schema>;
+import { orderFormSchema, type OrderFormData } from '@/lib/form-validation';
+import { PhoneInput } from '@/components/forms/PhoneInput';
+import { CyrillicInput } from '@/components/forms/CyrillicInput';
+import { AddressInput } from '@/components/forms/AddressInput';
+import { DatePicker } from '@/components/forms/DatePicker';
+import { TimePicker } from '@/components/forms/TimePicker';
 
 const MIN_SUBMIT_SECONDS = 3;
 
@@ -32,33 +24,54 @@ export function OrderForm({
   onSuccess,
   className,
   compact,
+  submitLabel = 'Отправить заявку',
+  formName = 'order',
 }: {
   onSuccess?: () => void;
   className?: string;
   compact?: boolean;
+  submitLabel?: string;
+  formName?: string;
 }) {
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
   const mountedAt = React.useRef<number>(Date.now());
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: { honeypot: '' },
+  } = useForm<OrderFormData>({
+    resolver: zodResolver(orderFormSchema),
+    defaultValues: {
+      honeypot: '',
+      name: '',
+      phone: '+7',
+      address: '',
+      date: '',
+      time: '',
+      serviceType: '',
+    },
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: OrderFormData) => {
     if (data.honeypot) return;
     if (Date.now() - mountedAt.current < MIN_SUBMIT_SECONDS * 1000) return;
     setSubmitting(true);
     try {
       await new Promise((r) => setTimeout(r, 800));
-      trackConversion('order');
-      reset();
+      trackConversion(formName);
+      reset({
+        honeypot: '',
+        name: '',
+        phone: '+7',
+        address: '',
+        date: '',
+        time: '',
+        serviceType: '',
+      });
       setSuccessOpen(true);
       onSuccess?.();
     } finally {
@@ -84,12 +97,20 @@ export function OrderForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="order-name">Имя *</Label>
-            <Input
-              id="order-name"
-              placeholder="Иван"
-              {...register('name')}
-              className={errors.name ? 'border-red-500' : ''}
-              aria-invalid={!!errors.name}
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => (
+                <CyrillicInput
+                  id="order-name"
+                  placeholder="Иван"
+                  value={field.value ?? ''}
+                  onChange={(v) => field.onChange(v)}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
+                  error={!!errors.name}
+                />
+              )}
             />
             {errors.name && (
               <p className="text-sm text-red-600" role="alert">{errors.name.message}</p>
@@ -97,13 +118,19 @@ export function OrderForm({
           </div>
           <div className="space-y-2">
             <Label htmlFor="order-phone">Телефон *</Label>
-            <Input
-              id="order-phone"
-              type="tel"
-              placeholder="+7 (999) 123-45-67"
-              {...register('phone')}
-              className={errors.phone ? 'border-red-500' : ''}
-              aria-invalid={!!errors.phone}
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <PhoneInput
+                  id="order-phone"
+                  value={field.value ?? '+7'}
+                  onChange={(v) => field.onChange(v)}
+                  onBlur={field.onBlur}
+                  ref={field.ref}
+                  error={!!errors.phone}
+                />
+              )}
             />
             {errors.phone && (
               <p className="text-sm text-red-600" role="alert">{errors.phone.message}</p>
@@ -114,26 +141,91 @@ export function OrderForm({
           <>
             <div className="space-y-2">
               <Label htmlFor="order-address">Адрес</Label>
-              <Input id="order-address" placeholder="Город, улица, дом" {...register('address')} />
+              <Controller
+                name="address"
+                control={control}
+                render={({ field }) => (
+                  <AddressInput
+                    id="order-address"
+                    value={field.value ?? ''}
+                    onChange={(v) => field.onChange(v)}
+                    onBlur={field.onBlur}
+                    ref={field.ref}
+                    error={!!errors.address}
+                  />
+                )}
+              />
+              {errors.address && (
+                <p className="text-sm text-red-600" role="alert">{errors.address.message}</p>
+              )}
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="order-date">Желаемая дата</Label>
-                <Input id="order-date" type="date" {...register('date')} />
+                <Controller
+                  name="date"
+                  control={control}
+                  render={({ field }) => (
+                    <DatePicker
+                      id="order-date"
+                      value={field.value ?? ''}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      error={!!errors.date}
+                    />
+                  )}
+                />
+                {errors.date && (
+                  <p className="text-sm text-red-600" role="alert">{errors.date.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="order-time">Время</Label>
-                <Input id="order-time" type="time" {...register('time')} />
+                <Controller
+                  name="time"
+                  control={control}
+                  render={({ field }) => (
+                    <TimePicker
+                      id="order-time"
+                      value={field.value ?? ''}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      error={!!errors.time}
+                    />
+                  )}
+                />
+                {errors.time && (
+                  <p className="text-sm text-red-600" role="alert">{errors.time.message}</p>
+                )}
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="order-service">Тип услуги</Label>
-              <Input id="order-service" placeholder="Например: генеральная уборка квартиры" {...register('serviceType')} />
+                <Controller
+                  name="serviceType"
+                  control={control}
+                  render={({ field }) => (
+                    <CyrillicInput
+                      id="order-service"
+                      placeholder="Например: генеральная уборка квартиры"
+                      maxLength={100}
+                      allowCommas
+                      value={field.value ?? ''}
+                      onChange={(v) => field.onChange(v)}
+                      onBlur={field.onBlur}
+                      ref={field.ref}
+                      error={!!errors.serviceType}
+                    />
+                  )}
+                />
+              {errors.serviceType && (
+                <p className="text-sm text-red-600" role="alert">{errors.serviceType.message}</p>
+              )}
             </div>
           </>
         )}
         <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
-          {submitting ? 'Отправка…' : 'Отправить заявку'}
+          {submitting ? 'Отправка…' : submitLabel}
         </Button>
       </form>
       {successOpen && (

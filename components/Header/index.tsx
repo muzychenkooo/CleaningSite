@@ -32,7 +32,7 @@ export function Header() {
 
       {/* Основная строка: логотип слева, навигация + CTA-кнопки справа. */}
       <Container className="header-container w-full min-w-0 max-w-[1536px]">
-        <div className="grid h-16 min-h-16 w-full min-w-0 grid-cols-[auto_1fr_auto] items-center gap-3 sm:gap-4 xl:gap-4">
+        <div className="grid h-20 min-h-20 w-full min-w-0 grid-cols-[auto_1fr_auto] items-center gap-3 sm:gap-4 xl:gap-4">
           {/* Логотип: изображение вместо текста */}
           <Link
             href="/"
@@ -42,9 +42,9 @@ export function Header() {
             <Image
               src={assetUrl('/assets/logo/new_logo.png')}
               alt="Большая Уборка"
-              width={200}
-              height={56}
-              className="h-12 w-auto object-contain sm:h-14"
+              width={240}
+              height={72}
+              className="h-14 w-auto object-contain sm:h-16"
               priority
             />
           </Link>

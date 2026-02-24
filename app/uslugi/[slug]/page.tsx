@@ -40,7 +40,7 @@ export default async function ServicePage({ params }: Props) {
 
   const serviceUrl = `${baseUrl}/uslugi/${slug}`;
   return (
-    <div className="py-12 sm:py-20">
+    <div className="py-8 sm:py-16">
       <ServiceJsonLd name={service.title} description={service.shortDesc} url={serviceUrl} />
       <Container>
         <nav className="text-sm text-slate-500 mb-6" aria-label="Хлебные крошки">

@@ -20,7 +20,7 @@ function ServicesListFallback() {
 
 export default function ServicesPage() {
   return (
-    <div className="py-12 sm:py-20">
+    <div className="py-8 sm:py-16">
       <Container>
         <nav className="text-sm text-slate-500 mb-6" aria-label="Хлебные крошки">
           <Link href="/" className="hover:text-primary-600">Главная</Link>

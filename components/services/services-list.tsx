@@ -34,11 +34,11 @@ export function ServicesList() {
         {list.map((s) => (
           <li key={s.id}>
             <Card className="h-full flex flex-col">
-              <CardContent className="pt-6 flex-1">
+              <CardContent className="flex-1 px-3 pt-3 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
                 <CardTitle className="text-lg">{s.title}</CardTitle>
                 <p className="mt-2 text-sm text-slate-600">{s.shortDesc}</p>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="px-3 pb-3 sm:px-6 sm:pb-6">
                 <Button asChild>
                   <Link href={`/uslugi/${s.slug}`}>Подробнее и заказать</Link>
                 </Button>

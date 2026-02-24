@@ -181,6 +181,42 @@ Use Chrome DevTools Device Toolbar (F12 → Toggle Device Toolbar) or a real dev
 - [ ] Quiz contacts step: name + phone + consent required
 - [ ] Quiz: local state persists if you navigate away and return (localStorage)
 
+### Form validation (unified system)
+
+Run at `/` (OrderForm full), `/contacts/` (OrderForm compact), and `/quiz/` (contacts step):
+
+1. **Required fields**
+   - [ ] Leave Имя empty → blocks submit, shows "Введите свое имя", red border
+   - [ ] Leave Телефон as "+7" only → blocks submit, shows "Заполните поле Телефон", red border
+
+2. **Имя (Cyrillic only)**
+   - [ ] Type Latin letters (e.g. "John") → rejected/sanitized (only Cyrillic allowed)
+   - [ ] Type >30 chars → truncated or blocked
+   - [ ] Valid "Иван Петров" → passes
+
+3. **Phone mask**
+   - [ ] Phone shows +7 prefix (not removable)
+   - [ ] Type only digits after +7; no other symbols
+   - [ ] Partial phone (e.g. "+7 (999)") → blocks with "Введите корректный номер телефона"
+   - [ ] Full "+7 (999) 123-45-67" → passes
+
+4. **Address autocomplete (OrderForm full only)**
+   - [ ] Type "М" → suggestions appear (Москва, Мытищи, …)
+   - [ ] Select city → comma + space inserted
+   - [ ] Type street prefix "Л" → street suggestions for that city
+   - [ ] Select street → comma inserted
+   - [ ] Enter house number
+   - [ ] Invalid combination (e.g. city+street but no house) → "Такого адреса не существует"
+   - [ ] Empty address → no error (optional field)
+
+5. **Date / time (OrderForm full only)**
+   - [ ] Date: invalid year <2026 or >2100 → rejected/flagged
+   - [ ] Native date picker works; min="2026-01-01" max="2100-12-31"
+   - [ ] Time: native time picker; valid 00–23 : 00–59
+
+6. **Required asterisk**
+   - [ ] Имя * and Телефон * show asterisk on all forms (OrderForm + Quiz contacts)
+
 ### External links
 - [ ] All `target="_blank"` links open in new tab
 - [ ] All `target="_blank"` links have `rel="noopener noreferrer"`

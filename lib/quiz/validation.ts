@@ -1,15 +1,10 @@
 import { z } from 'zod';
 import type { QuizServiceType } from '@/data/quiz';
-
-const phoneRegex = /^[\d\s()+()-]{10,20}$/;
+import { nameSchema, phoneSchema } from '@/lib/form-validation';
 
 export const quizContactsSchema = z.object({
-  name: z.string().min(2, 'Укажите имя (минимум 2 символа)').max(100, 'Слишком длинное имя'),
-  phone: z
-    .string()
-    .min(10, 'Введите номер телефона')
-    .refine((v) => v.replace(/\D/g, '').length >= 10, 'Некорректный номер телефона')
-    .refine((v) => phoneRegex.test(v), 'Допустимы только цифры, пробелы и скобки'),
+  name: nameSchema,
+  phone: phoneSchema,
   consent: z.literal(true, {
     errorMap: () => ({ message: 'Необходимо согласие на обработку данных' }),
   }),
@@ -29,6 +24,10 @@ export interface QuizState {
   name?: string;
   phone?: string;
   consent?: boolean;
+  /** Custom service type entered via "Другое" */
+  customTypeLabel?: string;
+  /** Custom extras entered via "Другое" */
+  customExtrasLabel?: string;
 }
 
 /** Convert quiz state to pricing params for optional estimate (uses existing formula). */

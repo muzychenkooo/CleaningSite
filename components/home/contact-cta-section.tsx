@@ -9,10 +9,10 @@ export function ContactCtaSection() {
       <Container>
         <div className="max-w-xl">
           <h2 id="zayavka" className="font-display text-3xl font-bold text-slate-900 scroll-mt-24">
-            Остались вопросы?
+            Оформить заявку
           </h2>
           <p className="mt-2 text-slate-600">
-            Оставьте свои контакты и наш менеджер свяжется с вами!
+            Решили воспользоваться нашими услугами? Прекрасный выбор! Скорее заполняйте форму и мы с вами обговорим детали.
           </p>
           <div className="mt-8">
             <OrderForm />

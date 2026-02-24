@@ -56,14 +56,14 @@ export function ServicesSection() {
           <div className="mt-6">
             {activeTab === 'individuals' && (
               <>
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   {individuals.map((s) => (
                     <Card key={s.id} className="flex flex-col rounded-2xl border-slate-200 overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 motion-reduce:transform-none">
-                      <CardContent className="pt-6 flex-1">
-                        <CardTitle className="text-base font-semibold">{s.title}</CardTitle>
-                        <p className="mt-2 text-sm text-slate-600 line-clamp-3 leading-relaxed">{s.shortDesc}</p>
+                      <CardContent className="pt-2 pb-4 sm:pt-5 sm:pb-6 flex-1">
+                        <CardTitle className="text-base font-semibold leading-snug">{s.title}</CardTitle>
+                        <p className="mt-1 text-sm text-slate-600 line-clamp-3 leading-relaxed">{s.shortDesc}</p>
                       </CardContent>
-                      <CardFooter className="pt-0">
+                      <CardFooter className="pt-0 pb-4 sm:pb-6">
                         <Button asChild variant="ghost" size="sm" className="p-0 h-auto font-medium text-primary-600 hover:text-primary-700">
                           <Link href={`/uslugi/${s.slug}`}>Узнать больше</Link>
                         </Button>
@@ -80,14 +80,14 @@ export function ServicesSection() {
             )}
             {activeTab === 'business' && (
               <>
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   {business.map((s) => (
                     <Card key={s.id} className="flex flex-col rounded-2xl border-slate-200 overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 motion-reduce:transform-none">
-                      <CardContent className="pt-6 flex-1">
-                        <CardTitle className="text-base font-semibold">{s.title}</CardTitle>
-                        <p className="mt-2 text-sm text-slate-600 line-clamp-3 leading-relaxed">{s.shortDesc}</p>
+                      <CardContent className="pt-2 pb-4 sm:pt-5 sm:pb-6 flex-1">
+                        <CardTitle className="text-base font-semibold leading-snug">{s.title}</CardTitle>
+                        <p className="mt-1 text-sm text-slate-600 line-clamp-3 leading-relaxed">{s.shortDesc}</p>
                       </CardContent>
-                      <CardFooter className="pt-0">
+                      <CardFooter className="pt-0 pb-4 sm:pb-6">
                         <Button asChild variant="ghost" size="sm" className="p-0 h-auto font-medium text-primary-600 hover:text-primary-700">
                           <Link href={`/uslugi/${s.slug}`}>Узнать больше</Link>
                         </Button>

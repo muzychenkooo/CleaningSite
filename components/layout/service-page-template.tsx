@@ -80,7 +80,7 @@ export function ServicePageTemplate(props: Props) {
   /* Legacy: short form without full content blocks */
   const { breadcrumbs, title, intro, priceFrom, included, children, anchorSections } = props;
   return (
-    <div className="py-12 sm:py-20">
+    <div className="py-8 sm:py-16">
       <ServiceHero breadcrumbs={breadcrumbs} title={title} intro={intro} />
       {included && included.length > 0 && (
         <ServiceChecklist items={included} />

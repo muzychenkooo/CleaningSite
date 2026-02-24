@@ -10,6 +10,7 @@ import { VideoReviewsSection } from '@/components/home/video-reviews-section';
 import { TeamSection } from '@/components/home/team-section';
 import { StepsSection } from '@/components/home/steps-section';
 import { FAQSection } from '@/components/home/faq-section';
+import { ContactQuestionsSection } from '@/components/home/contact-questions-section';
 import { GallerySection } from '@/components/home/gallery-section';
 import { ContactCtaSection } from '@/components/home/contact-cta-section';
 
@@ -29,6 +30,7 @@ export default function HomePage() {
       <TeamSection />
       <StepsSection />
       <FAQSection />
+      <ContactQuestionsSection />
       <GallerySection />
       <ContactCtaSection />
     </div>

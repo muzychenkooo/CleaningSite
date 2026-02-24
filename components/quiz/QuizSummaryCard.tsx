@@ -12,11 +12,16 @@ type Props = {
 export function QuizSummaryCard({ state, className }: Props) {
   const typeStep = QUIZ_STEPS.find((s) => s.id === 'type');
   const typeOption = typeStep?.options?.find((o) => o.value === state.type);
+  const typeLabel = typeOption?.shortLabel ?? state.customTypeLabel;
   const areaStep = QUIZ_STEPS.find((s) => s.id === 'area');
   const urgencyStep = QUIZ_STEPS.find((s) => s.id === 'urgency');
   const urgencyOption = urgencyStep?.options?.find((o) => o.value === state.urgency);
   const extrasStep = QUIZ_STEPS.find((s) => s.id === 'extras');
   const selectedExtras = extrasStep?.options?.filter((o) => state.extras?.[o.key]) ?? [];
+  const allExtrasLabels = [
+    ...selectedExtras.map((e) => e.label),
+    ...(state.customExtrasLabel ? [state.customExtrasLabel] : []),
+  ];
 
   return (
     <div
@@ -29,10 +34,10 @@ export function QuizSummaryCard({ state, className }: Props) {
     >
       <h3 className="font-display text-lg font-semibold text-slate-900">Ваш выбор</h3>
       <dl className="mt-4 space-y-3 text-sm">
-        {typeOption && (
+        {typeLabel && (
           <>
             <dt className="text-slate-500">Тип уборки</dt>
-            <dd className="font-medium text-slate-800">{typeOption.shortLabel}</dd>
+            <dd className="font-medium text-slate-800">{typeLabel}</dd>
           </>
         )}
         {state.area != null && areaStep && (
@@ -59,10 +64,10 @@ export function QuizSummaryCard({ state, className }: Props) {
             <dd className="font-medium text-slate-800">{urgencyOption.shortLabel}</dd>
           </>
         )}
-        {selectedExtras.length > 0 && (
+        {allExtrasLabels.length > 0 && (
           <>
             <dt className="text-slate-500">Доп. услуги</dt>
-            <dd className="font-medium text-slate-800">{selectedExtras.map((e) => e.label).join(', ')}</dd>
+            <dd className="font-medium text-slate-800">{allExtrasLabels.join(', ')}</dd>
           </>
         )}
       </dl>

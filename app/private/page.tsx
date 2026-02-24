@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default function PrivateLandingPage() {
   const links = privateNav.filter((item) => item.href !== '/private/');
   return (
-    <div className="py-12 sm:py-20">
+    <div className="py-8 sm:py-16">
       <Container>
         <Breadcrumbs items={[{ label: 'Главная', href: '/' }, { label: 'Частным клиентам' }]} />
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">

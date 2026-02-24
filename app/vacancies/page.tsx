@@ -7,7 +7,7 @@ const baseUrl = 'https://bigyborka.ru';
 
 export const metadata: Metadata = {
   title: 'Вакансии',
-  description: `Работа в клининговой компании ${site.name}. Вакансия мобильного клинера. Москва и МО. ЗП 50–120 тыс. руб./мес. Оформление по СМЗ или ГПХ.`,
+  description: `Работа в клининговой компании ${site.name}. Вакансия мобильного клинера. Москва и МО. Оформление по СМЗ или ГПХ.`,
   openGraph: {
     title: `Вакансии | ${site.name}`,
     url: `${baseUrl}/vacancies/`,
@@ -46,7 +46,7 @@ const conditions = [
 
 export default function VacanciesPage() {
   return (
-    <div className="py-12 sm:py-20">
+    <div className="py-8 sm:py-16">
       <Container>
         <Breadcrumbs items={[{ label: 'Главная', href: '/' }, { label: 'Вакансии' }]} />
 
@@ -59,10 +59,6 @@ export default function VacanciesPage() {
         <p className="mt-2 max-w-2xl text-slate-600">
           Нам требуются сотрудники для постоянной работы по графику и разовых заказов в удобное время.
         </p>
-        <p className="mt-3 text-lg text-primary-700">
-          <strong>ЗП 50–120 тыс. руб./мес.</strong> — и это абсолютно реально, всё зависит от квалификации и занятости.
-        </p>
-
         {/* Main position card */}
         <div className="mt-10 rounded-xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
           <h2 className="text-xl font-semibold text-slate-900">Мобильный клинер</h2>

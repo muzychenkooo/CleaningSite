@@ -39,21 +39,20 @@ function VideoCard({ src, name }: { src: string; name: string }) {
   };
 
   return (
-    <div className="flex flex-col rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
-      {/* Video wrapper — constrained height, portrait-safe */}
-      <div className="relative bg-slate-900 flex items-center justify-center">
+    <div className="mx-auto flex w-full max-w-[210px] flex-col rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm sm:max-w-[230px] lg:max-w-[250px]">
+      {/* Video wrapper — вертикальное видео без боковых рамок */}
+      <div className="relative aspect-[9/16] bg-black">
         <video
           ref={videoRef}
           src={src}
           preload="metadata"
           playsInline
           controls={playing}
-          className="block w-full object-contain"
-          style={{ maxHeight: 'min(62vh, 460px)' }}
+          className="block h-full w-full object-cover"
           aria-label={name}
         />
 
-        {/* Play overlay — disappears permanently on first click */}
+        {/* Play overlay — прозрачная кнопка с обводкой, исчезает после клика */}
         {!playing && (
           <button
             type="button"
@@ -69,7 +68,7 @@ function VideoCard({ src, name }: { src: string; name: string }) {
             <span
               aria-hidden
               className="flex h-16 w-16 items-center justify-center
-                rounded-full bg-primary-600 text-white shadow-lg
+                rounded-full border border-white/90 bg-black/20 text-white shadow-lg backdrop-blur-sm
                 transition-transform duration-200
                 hover:scale-110 active:scale-95"
             >
@@ -95,20 +94,40 @@ function VideoCard({ src, name }: { src: string; name: string }) {
 
 /* ─── Carousel ──────────────────────────────────────────────────────────── */
 export function VideoReviewsSection() {
-  const [visibleCount, setVisibleCount] = React.useState(2);
-  const visibleRef = React.useRef(2);
+  // На десктопе хотим 3 видео, на планшете 2, на мобиле 1
+  const [visibleCount, setVisibleCount] = React.useState(3);
+  const visibleRef = React.useRef(3);
 
-  const [offset, setOffset] = React.useState(2);
+  const [offset, setOffset] = React.useState(3);
   const [animated, setAnimated] = React.useState(true);
   const [busy, setBusy] = React.useState(false);
-  const offsetRef = React.useRef(2);
+  const offsetRef = React.useRef(3);
 
   const { extended: EXTENDED, clone: CLONE } = buildExtended(visibleCount);
   const EXT_LEN = EXTENDED.length;
 
+  const touchX = React.useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchX.current = e.touches[0]?.clientX ?? 0;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const endX = e.changedTouches[0]?.clientX ?? 0;
+    const diff = touchX.current - endX;
+    if (Math.abs(diff) > 48) {
+      if (diff > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+  };
+
   React.useEffect(() => {
     function update() {
-      const v = window.innerWidth < 640 ? 1 : 2;
+      const w = window.innerWidth;
+      const v = w < 640 ? 1 : w < 1024 ? 2 : 3;
       if (v === visibleRef.current) return;
       visibleRef.current = v;
       const { initOffset } = buildExtended(v);
@@ -207,13 +226,17 @@ export function VideoReviewsSection() {
             onClick={handlePrev}
             disabled={busy}
             aria-label="Предыдущий видеоотзыв"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-lg select-none"
+            className="carousel-arrow flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-lg select-none"
           >
             ‹
           </button>
 
           {/* Viewport */}
-          <div className="flex-1 overflow-hidden">
+          <div
+            className="flex-1 overflow-hidden max-w-5xl mx-auto touch-pan-y"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <div
               style={trackStyle}
               onTransitionEnd={handleTransitionEnd}
@@ -237,7 +260,7 @@ export function VideoReviewsSection() {
             onClick={handleNext}
             disabled={busy}
             aria-label="Следующий видеоотзыв"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-lg select-none"
+            className="carousel-arrow flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-lg select-none"
           >
             ›
           </button>

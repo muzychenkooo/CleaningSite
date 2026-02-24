@@ -1,65 +1,31 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { site } from '@/data/site';
 import { Container } from './container';
+import { assetUrl } from '@/lib/asset-url';
+
+const FOOTER_BUSINESS_LIMIT = 7;
 
 export function Footer() {
-  const halfBusiness = Math.ceil(site.nav.business.length / 2);
+  const footerBusinessItems = [
+    ...site.nav.business.slice(0, FOOTER_BUSINESS_LIMIT),
+    { label: 'Другое', href: '/business/' },
+  ];
 
   return (
     <footer className="w-full border-t border-slate-200 bg-slate-50">
       <Container className="pt-14 pb-24 sm:py-16">
-        {/* 4 equal columns on desktop, 2 on tablet, 1 on mobile */}
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_2fr_1fr]">
+        {/* 4 columns on desktop, 2x2 grid on mobile/tablet */}
+        <div className="grid grid-cols-2 gap-10 xl:grid-cols-4">
 
-          {/* Col 1: Brand */}
-          <div>
+          {/* Col 1: Brand — ограничиваем ширину контента, как у «Частным клиентам» */}
+          <div className="min-w-0 max-w-[13rem] order-1 xl:order-1">
             <p className="font-semibold text-slate-900">{site.name}</p>
             <p className="mt-2 text-sm text-slate-600">{site.description}</p>
-            <p className="mt-3 text-sm font-medium text-slate-700">{site.phoneDisplay}</p>
-            <p className="text-sm text-slate-600">{site.schedule}</p>
           </div>
 
-          {/* Col 2: Частным клиентам */}
-          <div>
-            <p className="font-semibold text-slate-900">Частным клиентам</p>
-            <ul className="mt-2 space-y-1">
-              {site.nav.individuals.map((item) => (
-                <li key={item.href}>
-                  <Link href={item.href} className="text-sm text-slate-600 hover:text-primary-600">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Col 3: Для бизнеса — 2 sub-columns inside this wider cell */}
-          <div>
-            <p className="font-semibold text-slate-900">Для бизнеса</p>
-            <div className="mt-2 grid grid-cols-2 gap-x-6">
-              <ul className="space-y-1">
-                {site.nav.business.slice(0, halfBusiness).map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href} className="text-sm text-slate-600 hover:text-primary-600">
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <ul className="space-y-1">
-                {site.nav.business.slice(halfBusiness).map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href} className="text-sm text-slate-600 hover:text-primary-600">
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Col 4: Contacts */}
-          <div>
+          {/* Col 2 (mobile order 2, desktop 4): Contacts */}
+          <div className="order-2 xl:order-4">
             <p className="font-semibold text-slate-900">Контакты</p>
             <ul className="mt-2 space-y-1.5">
               <li>
@@ -85,14 +51,56 @@ export function Footer() {
               </li>
             </ul>
           </div>
+
+          {/* Col 3 (mobile order 3, desktop 2): Частным клиентам */}
+          <div className="order-3 xl:order-2">
+            <p className="font-semibold text-slate-900">Частным клиентам</p>
+            <ul className="mt-2 space-y-1">
+              {site.nav.individuals.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="text-sm text-slate-600 hover:text-primary-600">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Col 4 (mobile order 4, desktop 3): Для бизнеса — 7 пунктов + «Другое» на /business/ */}
+          <div className="order-4 xl:order-3">
+            <p className="font-semibold text-slate-900">Для бизнеса</p>
+            <ul className="mt-2 space-y-1">
+              {footerBusinessItems.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="text-sm text-slate-600 hover:text-primary-600">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-10 flex flex-col items-center gap-4 border-t border-slate-200 pt-8 sm:flex-row sm:justify-between">
-          <p className="text-sm text-slate-500">
+        <div className="mt-10 flex flex-col items-center gap-4 border-t border-slate-200 pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-slate-500 text-center sm:text-left">
             © {new Date().getFullYear()} {site.legal.companyName}. {site.legal.rights}.
           </p>
-          <div className="flex flex-wrap gap-5">
+
+          {/* Desktop-only logo in the center */}
+          <div className="hidden md:flex flex-1 justify-center">
+            <Link href="/" aria-label="Большая Уборка — на главную">
+              <Image
+                src={assetUrl('/assets/logo/new_logo.png')}
+                alt={site.name}
+                width={280}
+                height={80}
+                className="h-16 w-auto object-contain"
+              />
+            </Link>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-5 sm:justify-end">
             <Link href="/vacancies/" className="text-sm text-slate-500 hover:text-primary-600">
               Вакансии
             </Link>

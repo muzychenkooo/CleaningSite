@@ -31,6 +31,9 @@
     @apply bg-white text-slate-900 antialiased overflow-x-hidden min-w-0;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+  body.no-scroll {
+    overflow: hidden;
+  }
   /* Prevent horizontal scroll from flex/grid children; fix root causes in components. */
   main {
     @apply min-w-0 w-full;
@@ -50,11 +53,35 @@
   .focus-ring {
     @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
   }
+
+  /* Tighter default heading spacing on small screens */
+  @media (max-width: 639px) {
+    h1,
+    h2,
+    h3 {
+      margin-top: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+  }
 }
 
 @layer components {
   .hero-gradient {
     background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-to) 50%, #0d2444 100%);
+  }
+  /* Hero: occupy almost full viewport height under sticky header */
+  .hero-full {
+    min-height: calc(100vh - 4.5rem);
+  }
+  @media (min-width: 1024px) {
+    .hero-full {
+      min-height: calc(100vh - 6.5rem); /* ~104px header (Topbar + main bar) */
+    }
+  }
+  @media (max-width: 767px) {
+    .carousel-arrow {
+      display: none;
+    }
   }
 }
 

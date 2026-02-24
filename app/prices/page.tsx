@@ -82,7 +82,7 @@ const priceItems = [
 
 export default function PricesPage() {
   return (
-    <div className="py-12 sm:py-20">
+    <div className="py-8 sm:py-16">
       <Container>
         <Breadcrumbs items={[{ label: 'Главная', href: '/' }, { label: 'Цены' }]} />
 
@@ -127,7 +127,11 @@ export default function PricesPage() {
           <a href={`tel:${site.phoneRaw}`} className="font-medium text-primary-600 hover:underline">
             {site.phone}
           </a>{' '}
-          или через калькулятор.
+          или по почте{' '}
+          <a href="mailto:biguborka@yandex.ru" className="font-medium text-primary-600 hover:underline">
+            biguborka@yandex.ru
+          </a>
+          .
         </p>
 
         {/* CTA */}
