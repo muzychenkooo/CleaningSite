@@ -25,9 +25,10 @@ npm run dev:clean
 
 ## Деплой на GitHub Pages
 
-1. В репозитории: **Settings → Pages → Build and deployment** — источник выберите **GitHub Actions**.
-2. При пуше в ветку `main` workflow `.github/workflows/deploy.yml` соберёт статический экспорт и выложит его на GitHub Pages.
-3. Сайт будет доступен по адресу: `https://<ваш-username>.github.io/KliningCompany_MVP_site/`
+1. В репозитории: **Settings → Pages → Build and deployment** — источник выберите **Deploy from a branch**.
+2. **Branch** — выберите **gh-pages**, папка **/ (root)**. Сохраните.
+3. При пуше в ветку `main` workflow `.github/workflows/deploy.yml` соберёт проект и зальёт результат в ветку `gh-pages`. Сайт будет отдаваться из неё.
+4. Сайт доступен по адресу: `https://<ваш-username>.github.io/CleaningSite/`
 
 ## Сборка и тесты
 
