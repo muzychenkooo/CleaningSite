@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Profi.ru brand: purple/violet #6929C4 background with white P -->
+  <rect width="32" height="32" rx="6" fill="#6929C4"/>
+  <!-- "P" letterform based on Profi.ru logo -->
+  <path d="M10 8h6.5c1.5 0 2.7.4 3.5 1.2.8.8 1.2 1.9 1.2 3.2 0 1.4-.4 2.5-1.2 3.3-.8.8-2 1.2-3.5 1.2H13v5.3h-3V8zm3 2.6v3.8h3.2c.7 0 1.3-.2 1.7-.6.4-.4.6-.9.6-1.3 0-.6-.2-1.1-.6-1.4-.4-.4-1-.6-1.7-.6H13z" fill="#FFFFFF"/>
+</svg>
