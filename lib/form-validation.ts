@@ -211,9 +211,9 @@ export const orderFormSchema = z.object({
   date: dateSchema,
   time: timeSchema,
   serviceType: serviceTypeSchema,
-  consent: z.literal(true, {
-    errorMap: () => ({ message: 'Необходимо согласие на обработку данных' }),
-  }),
+  consent: z
+    .boolean()
+    .refine((v) => v === true, { message: 'Необходимо согласие на обработку данных' }),
   honeypot: z.string().max(0).optional(),
 });
 
