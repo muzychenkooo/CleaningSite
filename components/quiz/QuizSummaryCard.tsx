@@ -6,16 +6,19 @@ import { cn } from '@/lib/utils';
 
 type Props = {
   state: QuizState;
+  discount?: number;
   className?: string;
 };
 
-export function QuizSummaryCard({ state, className }: Props) {
+export function QuizSummaryCard({ state, discount = 0, className }: Props) {
+  const placeStep = QUIZ_STEPS.find((s) => s.id === 'place');
+  const placeOption = placeStep?.options?.find((o) => o.value === state.place);
+  const placeLabel = placeOption?.shortLabel ?? state.customPlaceLabel ?? state.place;
+
   const typeStep = QUIZ_STEPS.find((s) => s.id === 'type');
   const typeOption = typeStep?.options?.find((o) => o.value === state.type);
   const typeLabel = typeOption?.shortLabel ?? state.customTypeLabel;
   const areaStep = QUIZ_STEPS.find((s) => s.id === 'area');
-  const urgencyStep = QUIZ_STEPS.find((s) => s.id === 'urgency');
-  const urgencyOption = urgencyStep?.options?.find((o) => o.value === state.urgency);
   const extrasStep = QUIZ_STEPS.find((s) => s.id === 'extras');
   const selectedExtras = extrasStep?.options?.filter((o) => state.extras?.[o.key]) ?? [];
   const allExtrasLabels = [
@@ -32,8 +35,26 @@ export function QuizSummaryCard({ state, className }: Props) {
       )}
       aria-label="Итог выбора"
     >
-      <h3 className="font-display text-lg font-semibold text-slate-900">Ваш выбор</h3>
+      <div className="rounded-xl border border-primary-100 bg-primary-50/70 px-4 py-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-primary-700">
+          Ваша скидка
+        </p>
+        <p className="mt-1 text-2xl font-bold text-primary-900">
+          {discount.toLocaleString('ru-RU')} ₽
+        </p>
+        <p className="mt-1 text-xs text-primary-800">
+          Точный размер скидки менеджер рассчитает после уточнения деталей.
+        </p>
+      </div>
+
+      <h3 className="mt-5 font-display text-lg font-semibold text-slate-900">Ваш выбор</h3>
       <dl className="mt-4 space-y-3 text-sm">
+        {placeLabel && (
+          <>
+            <dt className="text-slate-500">Объект уборки</dt>
+            <dd className="font-medium text-slate-800">{placeLabel}</dd>
+          </>
+        )}
         {typeLabel && (
           <>
             <dt className="text-slate-500">Тип уборки</dt>
@@ -58,10 +79,26 @@ export function QuizSummaryCard({ state, className }: Props) {
             </dd>
           </>
         )}
-        {urgencyOption && (
+        {state.date && (
           <>
-            <dt className="text-slate-500">Когда</dt>
-            <dd className="font-medium text-slate-800">{urgencyOption.shortLabel}</dd>
+            <dt className="text-slate-500">Дата уборки</dt>
+            <dd className="font-medium text-slate-800">
+              {new Date(state.date).toLocaleDateString('ru-RU')}
+            </dd>
+          </>
+        )}
+        {state.time && (
+          <>
+            <dt className="text-slate-500">Время</dt>
+            <dd className="font-medium text-slate-800">{state.time}</dd>
+          </>
+        )}
+        {state.preferredChannel && (
+          <>
+            <dt className="text-slate-500">Как связаться</dt>
+            <dd className="font-medium text-slate-800">
+              {state.preferredChannel === 'telegram' ? 'Telegram' : 'Телефон'}
+            </dd>
           </>
         )}
         {allExtrasLabels.length > 0 && (
@@ -82,6 +119,12 @@ export function QuizSummaryCard({ state, className }: Props) {
           {QUIZ_MICROCOPY.trustBadge3}
         </li>
       </ul>
+
+      <div className="mt-6 rounded-xl bg-slate-50 px-4 py-3">
+        <p className="text-xs leading-snug text-slate-600">
+          Менеджер свяжется с вами в течение 5–10 минут, уточнит детали уборки и подтвердит стоимость.
+        </p>
+      </div>
     </div>
   );
 }

@@ -56,6 +56,9 @@ export function GallerySection() {
   const [animated, setAnimated] = React.useState(true);
   const [busy, setBusy] = React.useState(false);
 
+  const [isMobile, setIsMobile] = React.useState(false);
+  const [showAllNews, setShowAllNews] = React.useState(false);
+
   // Keep a ref so transitionEnd handler always reads the latest offset
   const offsetRef = React.useRef(2);
 
@@ -92,6 +95,7 @@ export function GallerySection() {
       setOffset(initOffset);
       setAnimated(false);
       setVisibleCount(v);
+      setIsMobile(v === 1);
       // Re-enable animation after DOM settles
       requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
     }
@@ -190,6 +194,10 @@ export function GallerySection() {
     transform: `translateX(-${(offset / EXT_LEN) * 100}%)`,
     transition: animated ? 'transform 420ms cubic-bezier(0.4,0,0.2,1)' : 'none',
   };
+
+  const displayedReports =
+    isMobile && !showAllNews ? completedReports.slice(0, 3) : completedReports;
+  const hasMoreReports = isMobile && completedReports.length > 3;
 
   return (
     <section id="foto-video" className="w-full py-16 sm:py-24 bg-slate-50 scroll-mt-20">
@@ -296,7 +304,7 @@ export function GallerySection() {
         </div>
 
         {/* ── Видео с нами ── */}
-        <h2 className="font-display mt-16 text-2xl font-bold text-slate-900">
+        <h2 className="font-display mt-16 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
           Видео с нами
         </h2>
         <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-start">
@@ -316,38 +324,53 @@ export function GallerySection() {
           />
         </div>
 
-        {/* ── Выполненные работы ── */}
-        <h2 className="font-display mt-16 text-2xl font-bold text-slate-900">
-          Выполненные работы
+        {/* ── Последние новости ── */}
+        <h2 className="font-display mt-16 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          Последние новости
         </h2>
-        <div className="mt-6 space-y-6">
-          {completedReports.map((report) => (
-            <div key={report.id} className="rounded-xl border border-slate-200 bg-white p-6">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="relative h-40 w-full sm:w-56 shrink-0 rounded-lg overflow-hidden bg-slate-200">
-                  <Image
-                    src={assetUrl('/assets/restaurant/restaurant.png')}
-                    alt={report.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, 224px"
-                    loading="lazy"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900">{report.title}</h3>
-                  <p className="mt-2 text-sm text-slate-600 line-clamp-3">{report.excerpt}</p>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {displayedReports.map((report) => (
+            <div key={report.id} className="rounded-xl border border-slate-200 bg-white p-6 h-full flex flex-col">
+              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-slate-200">
+                <Image
+                  src={assetUrl('/assets/restaurant/restaurant.png')}
+                  alt={report.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 224px"
+                  loading="lazy"
+                />
+              </div>
+              <div className="mt-4 flex-1 flex flex-col">
+                <h3 className="font-semibold text-slate-900">{report.title}</h3>
+                <p className="mt-2 text-sm text-slate-600 line-clamp-3">{report.excerpt}</p>
+                <div className="mt-4 flex items-center justify-between gap-3">
                   <Link
                     href={report.href}
-                    className="mt-2 inline-block text-sm font-medium text-primary-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded"
+                    className="text-sm font-medium text-primary-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded"
                   >
                     Читать далее
                   </Link>
+                  <p className="text-xs text-slate-600 text-right sm:text-sm">
+                    {report.date}
+                  </p>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        {hasMoreReports && (
+          <div className="mt-4 flex justify-center sm:hidden">
+            <button
+              type="button"
+              onClick={() => setShowAllNews((prev) => !prev)}
+              className="inline-flex items-center justify-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-primary-600 shadow-sm ring-1 ring-primary-100 hover:bg-primary-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+            >
+              {showAllNews ? 'Скрыть' : 'Смотреть больше'}
+            </button>
+          </div>
+        )}
 
       </Container>
     </section>

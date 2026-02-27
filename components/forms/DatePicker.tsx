@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { DATE_MIN, DATE_MAX } from '@/lib/form-validation';
 
 const DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0'));
 const MONTHS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
@@ -34,6 +35,37 @@ function toISO(day: number, month: number, year: number): string {
   const d = String(day).padStart(2, '0');
   const m = String(month).padStart(2, '0');
   return `${year}-${m}-${d}`;
+}
+
+function getEffectiveMinDateISO(): string {
+  const [minYear, minMonth, minDay] = DATE_MIN.split('-').map(Number);
+  const [maxYear, maxMonth, maxDay] = DATE_MAX.split('-').map(Number);
+
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = today.getMonth() + 1;
+  const d = today.getDate();
+
+  const clampToRange = (year: number, month: number, day: number) => {
+    const belowMin =
+      year < minYear ||
+      (year === minYear && month < minMonth) ||
+      (year === minYear && month === minMonth && day < minDay);
+    if (belowMin) {
+      return { year: minYear, month: minMonth, day: minDay };
+    }
+    const aboveMax =
+      year > maxYear ||
+      (year === maxYear && month > maxMonth) ||
+      (year === maxYear && month === maxMonth && day > maxDay);
+    if (aboveMax) {
+      return { year: maxYear, month: maxMonth, day: maxDay };
+    }
+    return { year, month, day };
+  };
+
+  const effective = clampToRange(y, m, d);
+  return toISO(effective.day, effective.month, effective.year);
 }
 
 // ─── Desktop: dropdown list ───
@@ -109,22 +141,33 @@ function WheelColumn({
   onSelect,
   label,
   className,
+  initialScrollToTop = false,
 }: {
   items: string[];
   selectedIndex: number;
   onSelect: (index: number) => void;
   label?: string;
   className?: string;
+  /** На мобильном: не прокручивать к выбранному, оставить рулетку в верхнем положении */
+  initialScrollToTop?: boolean;
 }) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
-  const isScrollingRef = React.useRef(false);
+  const didInitialScrollRef = React.useRef(false);
 
   React.useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+    if (initialScrollToTop) {
+      if (!didInitialScrollRef.current) {
+        didInitialScrollRef.current = true;
+        el.scrollTop = 0;
+      }
+      return;
+    }
+    didInitialScrollRef.current = false;
     const targetScroll = selectedIndex * WHEEL_ITEM_HEIGHT;
     el.scrollTop = Math.max(0, targetScroll);
-  }, [selectedIndex]);
+  }, [initialScrollToTop, selectedIndex]);
 
   const handleScroll = React.useCallback(() => {
     const el = scrollRef.current;
@@ -252,8 +295,8 @@ export function DatePicker({ value, onChange, onBlur, error, className, id }: Da
   );
 
   const [openPart, setOpenPart] = React.useState<'day' | 'month' | 'year' | null>(null);
-  const [mobileOpen, setMobileOpen] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const [minDate, setMinDate] = React.useState<string>(DATE_MIN);
 
   React.useEffect(() => {
     if (!openPart) return;
@@ -268,39 +311,28 @@ export function DatePicker({ value, onChange, onBlur, error, className, id }: Da
 
   const isMobile = useIsMobile();
 
-  // Lock background scroll while mobile wheel is open so picker does not "scroll away"
   React.useEffect(() => {
-    if (!isMobile || !mobileOpen) return;
-    if (typeof document === 'undefined') return;
-    const { body } = document;
-    const prevOverflow = body.style.overflow;
-    body.style.overflow = 'hidden';
-    return () => {
-      body.style.overflow = prevOverflow;
-    };
-  }, [isMobile, mobileOpen]);
+    setMinDate(getEffectiveMinDateISO());
+  }, []);
 
   return (
     <>
       <div ref={containerRef} className={cn('relative', className)}>
         {isMobile ? (
-          <button
-            type="button"
+          <input
             id={id}
-            onClick={() => setMobileOpen(true)}
-            onBlur={onBlur}
+            type="date"
             className={cn(
-              'flex h-10 w-full min-w-0 items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-left ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
-              error && 'border-red-500 focus-visible:ring-red-500',
+              'flex h-10 w-full min-w-0 items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-left ring-offset-white',
+              error && 'border-red-500',
               !value && 'text-slate-500'
             )}
-            aria-haspopup="dialog"
-            aria-expanded={mobileOpen}
-          >
-            {value
-              ? `${String(day).padStart(2, '0')}.${String(month).padStart(2, '0')}.${year}`
-              : 'День · Месяц · Год'}
-          </button>
+            min={minDate}
+            max={DATE_MAX}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onBlur={onBlur}
+          />
         ) : (
           <div
             id={id}
@@ -377,61 +409,6 @@ export function DatePicker({ value, onChange, onBlur, error, className, id }: Da
           />
         )}
       </div>
-
-      {/* Mobile: bottom sheet with wheels */}
-      {isMobile && mobileOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-40 bg-black/50"
-            aria-hidden
-            onClick={() => setMobileOpen(false)}
-          />
-          <div
-            className="fixed left-0 right-0 bottom-0 z-50 rounded-t-2xl border-t border-slate-200 bg-white shadow-xl safe-area-pb"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Выбор даты"
-          >
-            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-              <button
-                type="button"
-                className="text-slate-500 font-medium"
-                onClick={() => setMobileOpen(false)}
-              >
-                Отмена
-              </button>
-              <span className="font-semibold text-slate-900">Дата</span>
-              <button
-                type="button"
-                className="text-primary-600 font-medium"
-                onClick={() => setMobileOpen(false)}
-              >
-                Готово
-              </button>
-            </div>
-            <div className="flex gap-2 px-2 py-4" style={{ height: 260 }}>
-              <WheelColumn
-                items={DAYS}
-                selectedIndex={day - 1}
-                onSelect={handleDayChange}
-                label="День"
-              />
-              <WheelColumn
-                items={MONTHS.map((m, i) => `${m} — ${MONTH_NAMES[i]}`)}
-                selectedIndex={month - 1}
-                onSelect={handleMonthChange}
-                label="Месяц"
-              />
-              <WheelColumn
-                items={YEARS}
-                selectedIndex={year - MIN_YEAR}
-                onSelect={handleYearChange}
-                label="Год"
-              />
-            </div>
-          </div>
-        </>
-      )}
     </>
   );
 }

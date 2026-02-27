@@ -7,13 +7,25 @@ export type QuizServiceType = 'apartment' | 'house' | 'office' | 'after_repair' 
 
 export const QUIZ_STEPS = [
   {
+    id: 'place',
+    title: 'Где нужно провести клининг?',
+    subtitle: 'Выберите объект, который нужно убрать',
+    options: [
+      { value: 'apartment', label: 'Квартира', shortLabel: 'Квартира' },
+      { value: 'house', label: 'Дом / коттедж', shortLabel: 'Дом / коттедж' },
+      { value: 'office', label: 'Нежилое помещение / офис', shortLabel: 'Офис / нежилое' },
+      { value: 'window_facade', label: 'Мойка окон / фасада', shortLabel: 'Окна / фасад' },
+      { value: 'other_place', label: 'Другое помещение', shortLabel: 'Другое' },
+    ],
+  },
+  {
     id: 'type',
     title: 'Тип уборки',
-    subtitle: 'Выберите один вариант',
+    subtitle: 'Выберите один вариант или укажите свой',
     options: [
-      { value: 'apartment' as const, label: 'Квартира', shortLabel: 'Квартира' },
-      { value: 'house' as const, label: 'Дом / коттедж', shortLabel: 'Дом' },
-      { value: 'office' as const, label: 'Офис', shortLabel: 'Офис' },
+      { value: 'apartment' as const, label: 'Поддерживающая уборка', shortLabel: 'Поддерживающая' },
+      { value: 'house' as const, label: 'Генеральная уборка', shortLabel: 'Генеральная' },
+      { value: 'office' as const, label: 'Уборка офиса', shortLabel: 'Офисная уборка' },
       { value: 'after_repair' as const, label: 'После ремонта', shortLabel: 'После ремонта' },
       { value: 'window' as const, label: 'Только мойка окон', shortLabel: 'Мойка окон' },
     ],
@@ -23,7 +35,7 @@ export const QUIZ_STEPS = [
     title: 'Площадь помещения',
     subtitle: 'Укажите площадь в м²',
     min: 10,
-    max: 2000,
+    max: 10000,
     step: 5,
     presets: [30, 50, 75, 100, 150, 200],
     unit: 'м²',
@@ -54,15 +66,10 @@ export const QUIZ_STEPS = [
     skipFor: ['window'] as QuizServiceType[],
   },
   {
-    id: 'urgency',
-    title: 'Когда нужна уборка?',
-    subtitle: 'Мы подстроимся под ваши сроки',
-    options: [
-      { value: 'asap', label: 'Как можно скорее', shortLabel: 'Срочно' },
-      { value: 'this_week', label: 'На этой неделе', shortLabel: 'На неделе' },
-      { value: 'next_week', label: 'На следующей неделе', shortLabel: 'След. неделя' },
-      { value: 'date', label: 'Конкретная дата (уточним по телефону)', shortLabel: 'К дате' },
-    ],
+    id: 'schedule',
+    title: 'Выберите дату и время уборки',
+    subtitle: 'Можно пропустить, если точная дата пока неизвестна',
+    optional: true,
   },
   {
     id: 'contacts',

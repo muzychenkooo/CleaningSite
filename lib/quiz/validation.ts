@@ -15,12 +15,22 @@ export const quizContactsSchema = z.object({
 export type QuizContactsInput = z.infer<typeof quizContactsSchema>;
 
 export interface QuizState {
+  /** Где находится объект клининга (квартира, дом, офис и т.п.) */
+  place?: string;
+  /** Custom place entered via "Другое" на первом шаге */
+  customPlaceLabel?: string;
   type?: QuizServiceType;
   area?: number;
   rooms?: number;
   bathrooms?: number;
   extras?: Record<string, boolean>;
   urgency?: string;
+  /** Запрошенная дата уборки (YYYY-MM-DD) */
+  date?: string;
+  /** Запрошенное время уборки (HH:mm) */
+  time?: string;
+  /** Предпочтительный канал связи: телефон / Telegram */
+  preferredChannel?: 'phone' | 'telegram';
   name?: string;
   phone?: string;
   consent?: boolean;
@@ -39,7 +49,7 @@ export function quizStateToPricingParams(state: QuizState): {
 } | null {
   const type = state.type ?? 'apartment';
   const area = state.area ?? 50;
-  if (area < 10 || area > 2000) return null;
+  if (area < 10 || area > 10000) return null;
   const hasBalcony = state.extras?.balcony ?? false;
   const windowsCount = type === 'window' ? Math.max(1, Math.ceil(area / 15)) : (state.rooms ?? 2) * 2;
   return {

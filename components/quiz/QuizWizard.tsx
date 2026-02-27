@@ -13,6 +13,8 @@ import { Label } from '@/components/ui/label';
 import { QuizSummaryCard } from '@/components/quiz/QuizSummaryCard';
 import { PhoneInput } from '@/components/forms/PhoneInput';
 import { CyrillicInput } from '@/components/forms/CyrillicInput';
+import { DatePicker } from '@/components/forms/DatePicker';
+import { TimePicker } from '@/components/forms/TimePicker';
 import { cn } from '@/lib/utils';
 
 const QUIZ_STORAGE_KEY = 'quiz_state';
@@ -34,14 +36,18 @@ function loadState(): Partial<QuizState> {
     if (!raw) return {};
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     return {
+      place: typeof parsed.place === 'string' ? parsed.place : undefined,
+      customPlaceLabel: typeof parsed.customPlaceLabel === 'string' ? parsed.customPlaceLabel : undefined,
       type: parsed.type as QuizServiceType | undefined,
       area: typeof parsed.area === 'number' ? parsed.area : undefined,
       rooms: typeof parsed.rooms === 'number' ? parsed.rooms : undefined,
       bathrooms: typeof parsed.bathrooms === 'number' ? parsed.bathrooms : undefined,
       extras: typeof parsed.extras === 'object' && parsed.extras ? (parsed.extras as Record<string, boolean>) : undefined,
-      urgency: typeof parsed.urgency === 'string' ? parsed.urgency : undefined,
+      date: typeof parsed.date === 'string' ? parsed.date : undefined,
+      time: typeof parsed.time === 'string' ? parsed.time : undefined,
       customTypeLabel: typeof parsed.customTypeLabel === 'string' ? parsed.customTypeLabel : undefined,
       customExtrasLabel: typeof parsed.customExtrasLabel === 'string' ? parsed.customExtrasLabel : undefined,
+      preferredChannel: typeof parsed.preferredChannel === 'string' ? (parsed.preferredChannel as 'phone' | 'telegram') : undefined,
     };
   } catch {
     return {};
@@ -89,6 +95,17 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
   const [areaError, setAreaError] = React.useState<string | null>(null);
   const [roomsBathroomsError, setRoomsBathroomsError] = React.useState<string | null>(null);
 
+  // ─── "Другое" on first step (place) ───
+  const [isOtherPlaceSelected, setIsOtherPlaceSelected] = React.useState<boolean>(() => {
+    const s = loadState();
+    return !!s.customPlaceLabel;
+  });
+  const [customPlaceText, setCustomPlaceText] = React.useState<string>(() => {
+    const s = loadState();
+    return s.customPlaceLabel ?? '';
+  });
+  const [customPlaceError, setCustomPlaceError] = React.useState<string | null>(null);
+
   // ─── "Другое" in Тип уборки ───
   const [isOtherTypeSelected, setIsOtherTypeSelected] = React.useState<boolean>(() => {
     const s = loadState();
@@ -113,17 +130,31 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
 
   const effectiveStepIds = React.useMemo(() => {
     const type = state.type;
-    return QUIZ_STEPS.filter((s) => {
+    let ids = QUIZ_STEPS.filter((s) => {
       if (!('skipFor' in s) || !s.skipFor) return true;
       return !type || !s.skipFor.includes(type);
     }).map((s) => s.id);
-  }, [state.type]);
+
+    // Для мойки окон / фасада:
+    // - не спрашиваем комнаты/санузлы
+    // - не показываем тип уборки
+    if (state.place === 'window_facade' || state.type === 'window') {
+      ids = ids.filter((id) => id !== 'rooms' && id !== 'type');
+    }
+
+    return ids;
+  }, [state.type, state.place]);
 
   const totalSteps = effectiveStepIds.length;
   const stepId = effectiveStepIds[currentIndex];
   const stepConfig = QUIZ_STEPS.find((s) => s.id === stepId);
   const isFirst = currentIndex === 0;
   const isContactsStep = stepId === 'contacts';
+  const progressPercent = React.useMemo(() => {
+    if (totalSteps <= 1) return 100;
+    const ratio = currentIndex / (totalSteps - 1);
+    return Math.round(Math.min(100, Math.max(0, ratio * 100)));
+  }, [currentIndex, totalSteps]);
 
   React.useEffect(() => {
     saveState(state);
@@ -133,9 +164,28 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
     setState((prev) => ({ ...prev, ...patch }));
   }, []);
 
+  // ─── Discount state (0 → 500 ₽) ───
+  const [discount, setDiscount] = React.useState(0);
+
   const goNext = React.useCallback(() => {
-    if (currentIndex < totalSteps - 1) setCurrentIndex((i) => i + 1);
-  }, [currentIndex, totalSteps]);
+    setCurrentIndex((prev) => {
+      if (prev >= totalSteps - 1) return prev;
+      const next = prev + 1;
+      setDiscount((prevDiscount) => {
+        if (next === totalSteps - 1) {
+          return 500;
+        }
+        const ratio = totalSteps > 1 ? next / (totalSteps - 1) : 1;
+        const stepMax = Math.round(500 * ratio);
+        const min = prevDiscount;
+        const max = Math.min(500, Math.max(stepMax, min));
+        if (max <= min) return prevDiscount;
+        const delta = Math.floor(Math.random() * (max - min + 1));
+        return Math.min(500, min + delta);
+      });
+      return next;
+    });
+  }, [totalSteps]);
 
   const goBack = React.useCallback(() => {
     if (currentIndex > 0) setCurrentIndex((i) => i - 1);
@@ -153,9 +203,9 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
       setAreaError('Данные введены некорректно');
       return;
     }
-    if (val > 100000) {
+    if (val > 10000) {
       setAreaError(
-        'Введенное значение не попадает в интервал допустимых значений. Введите корректное значение не менее 1 и не более 100.000'
+        'Введенное значение не попадает в интервал допустимых значений. Введите корректное значение не менее 1 и не более 10 000'
       );
       return;
     }
@@ -254,7 +304,7 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
   const estimate = estimateParams ? calculatePrice(estimateParams) : null;
 
   // Determine which Next handler to use for the mobile sticky button
-  const mobileStickyNextHandler =
+  const stepNextHandler =
     stepId === 'area'
       ? validateAndNextArea
       : stepId === 'rooms'
@@ -296,6 +346,119 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
 
             {/* ── Step content with stable min-height ── */}
             <div className="p-6 sm:p-8 min-h-[420px] flex flex-col">
+
+              {/* ═══ STEP: ГДЕ НУЖЕН КЛИНИНГ ═══ */}
+              {stepConfig && stepId === 'place' && (() => {
+                const placeStep = QUIZ_STEPS.find((s) => s.id === 'place');
+                const opts = placeStep && 'options' in placeStep ? placeStep.options : [];
+                return (
+                  <>
+                    <h3 className="font-display text-xl font-semibold text-slate-900 sm:text-2xl">
+                      {stepConfig.title}
+                    </h3>
+                    <p className="mt-1 text-slate-600">{stepConfig.subtitle}</p>
+                    <div
+                      className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                      role="group"
+                      aria-label={stepConfig.title}
+                    >
+                      {opts.map((opt) => {
+                        const isOther = opt.value === 'other_place';
+                        const isActiveOther = isOther && isOtherPlaceSelected;
+                        const isActiveNormal = !isOther && state.place === opt.value && !isOtherPlaceSelected;
+                        return (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => {
+                              if (isOther) {
+                                setIsOtherPlaceSelected(true);
+                                setCustomPlaceError(null);
+                                update({ place: undefined, customPlaceLabel: undefined });
+                                return;
+                              }
+                              setIsOtherPlaceSelected(false);
+                              setCustomPlaceError(null);
+
+                              if (opt.value === 'window_facade') {
+                                // Для мойки окон / фасада автоматически считаем тип "мойка окон"
+                                // и убираем доп. услуги как неактуальные.
+                                update({
+                                  place: 'window_facade',
+                                  customPlaceLabel: undefined,
+                                  type: 'window',
+                                  customTypeLabel: undefined,
+                                  extras: {},
+                                  customExtrasLabel: undefined,
+                                });
+                              } else {
+                                // Для остальных объектов сбрасываем кастомное название, даём выбрать тип на следующем шаге.
+                                update({
+                                  place: opt.value,
+                                  customPlaceLabel: undefined,
+                                  type: undefined,
+                                });
+                              }
+
+                              goNext();
+                            }}
+                            className={cn(
+                              'flex flex-col items-start justify-between rounded-xl border-2 px-4 py-4 text-left text-sm font-medium transition-all duration-200',
+                              'bg-white hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
+                              (isActiveNormal || isActiveOther)
+                                ? 'border-primary-500 bg-primary-50 text-primary-800 shadow-sm'
+                                : 'border-slate-200 text-slate-800'
+                            )}
+                          >
+                            <span className="text-base font-semibold">{opt.label}</span>
+                            {opt.shortLabel && (
+                              <span className="mt-1 text-xs font-normal text-slate-500">
+                                {opt.shortLabel}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {isOtherPlaceSelected && (
+                      <div className="mt-4 max-w-md space-y-3">
+                        <Input
+                          autoFocus
+                          value={customPlaceText}
+                          onChange={(e) => {
+                            const filtered = sanitizeCyrillicComma(e.target.value);
+                            setCustomPlaceText(filtered);
+                            setCustomPlaceError(null);
+                          }}
+                          placeholder="Опишите объект, например: склад, шоурум"
+                          className={cn('rounded-lg', customPlaceError && 'border-red-500')}
+                          aria-label="Укажите тип помещения"
+                        />
+                        {customPlaceError && (
+                          <p className="text-sm text-red-600" role="alert">
+                            {customPlaceError}
+                          </p>
+                        )}
+                        <Button
+                          type="button"
+                          size="lg"
+                          className="rounded-xl"
+                          onClick={() => {
+                            if (!customPlaceText.trim()) {
+                              setCustomPlaceError('Укажите помещение');
+                              return;
+                            }
+                            update({ place: undefined, customPlaceLabel: customPlaceText.trim() });
+                            goNext();
+                          }}
+                        >
+                          {QUIZ_MICROCOPY.next}
+                        </Button>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
 
               {/* ═══ STEP: ТИП УБОРКИ ═══ */}
               {stepConfig && stepId === 'type' && (() => {
@@ -444,6 +607,33 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
                       <span id="quiz-area-hint" className="text-slate-500 text-sm">
                         {stepConfig.unit}
                       </span>
+                    </div>
+                    <div className="pt-2">
+                      <input
+                        type="range"
+                        min={stepConfig.min}
+                        max={stepConfig.max}
+                        step={stepConfig.step}
+                        value={
+                          areaStr
+                            ? Number(areaStr)
+                            : state.area ?? stepConfig.presets[0]
+                        }
+                        onChange={(e) => {
+                          const numeric = filterNumericInput(e.target.value);
+                          setAreaStr(numeric);
+                          setAreaError(null);
+                        }}
+                        className="w-full accent-primary-600"
+                      />
+                      <div className="mt-1 flex justify-between text-[11px] text-slate-400">
+                        <span>
+                          {stepConfig.min} {stepConfig.unit}
+                        </span>
+                        <span>
+                          {stepConfig.max} {stepConfig.unit}
+                        </span>
+                      </div>
                     </div>
                     <div>
                       {areaError && (
@@ -611,40 +801,47 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
                 );
               })()}
 
-              {/* ═══ STEP: СРОЧНОСТЬ ═══ */}
-              {stepConfig && stepId === 'urgency' && (() => {
-                const urgencyStep = QUIZ_STEPS.find((s) => s.id === 'urgency');
-                const opts = urgencyStep && 'options' in urgencyStep ? urgencyStep.options : [];
-                return (
-                  <>
-                    <h3 className="font-display text-xl font-semibold text-slate-900 sm:text-2xl">
-                      {stepConfig.title}
-                    </h3>
-                    <p className="mt-1 text-slate-600">{stepConfig.subtitle}</p>
-                    <div className="mt-6 flex flex-col gap-3 sm:flex-wrap sm:flex-row">
-                      {opts.map((opt) => (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          onClick={() => {
-                            update({ urgency: opt.value });
-                            goNext();
-                          }}
-                          className={cn(
-                            'inline-flex w-full sm:w-auto items-center justify-center rounded-xl border-2 px-5 py-3.5 text-sm font-medium transition-all',
-                            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
-                            state.urgency === opt.value
-                              ? 'border-primary-500 bg-primary-50 text-primary-800'
-                              : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'
-                          )}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
+              {/* ═══ STEP: ДАТА / ВРЕМЯ ═══ */}
+              {stepConfig && stepId === 'schedule' && (
+                <>
+                  <h3 className="font-display text-xl font-semibold text-slate-900 sm:text-2xl">
+                    {stepConfig.title}
+                  </h3>
+                  <p className="mt-1 text-slate-600">{stepConfig.subtitle}</p>
+                  <div className="mt-6 grid gap-4 max-w-xl sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="quiz-date" className="text-slate-700 font-medium">
+                        Дата уборки
+                      </Label>
+                      <DatePicker
+                        id="quiz-date"
+                        value={state.date ?? ''}
+                        onChange={(val) => update({ date: val })}
+                      />
                     </div>
-                  </>
-                );
-              })()}
+                    <div className="space-y-2">
+                      <Label htmlFor="quiz-time" className="text-slate-700 font-medium">
+                        Время
+                      </Label>
+                      <TimePicker
+                        id="quiz-time"
+                        value={state.time ?? ''}
+                        onChange={(val) => update({ time: val })}
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      update({ date: undefined, time: undefined });
+                      goNext();
+                    }}
+                    className="mt-4 text-sm font-medium text-slate-500 underline underline-offset-2 hover:text-slate-700 self-start"
+                  >
+                    Можно пропустить
+                  </button>
+                </>
+              )}
 
               {/* ═══ STEP: КОНТАКТЫ ═══ */}
               {stepConfig && stepId === 'contacts' && 'consentText' in stepConfig && (
@@ -731,6 +928,38 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
                         </p>
                       )}
                     </div>
+                    <div className="pt-2">
+                      <p className="text-sm font-medium text-slate-700">Куда удобнее отправить расчёт?</p>
+                      <div className="mt-2 inline-flex rounded-full bg-slate-100 p-1 text-xs">
+                        <button
+                          type="button"
+                          onClick={() => update({ preferredChannel: 'phone' })}
+                          className={cn(
+                            'rounded-full px-3 py-1 font-medium transition-colors',
+                            (!state.preferredChannel || state.preferredChannel === 'phone')
+                              ? 'bg-white text-slate-900 shadow-sm'
+                              : 'text-slate-600 hover:text-slate-900'
+                          )}
+                        >
+                          Телефон
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => update({ preferredChannel: 'telegram' })}
+                          className={cn(
+                            'ml-1 rounded-full px-3 py-1 font-medium transition-colors',
+                            state.preferredChannel === 'telegram'
+                              ? 'bg-white text-slate-900 shadow-sm'
+                              : 'text-slate-600 hover:text-slate-900'
+                          )}
+                        >
+                          Telegram
+                        </button>
+                      </div>
+                      <p className="mt-1 text-xs text-slate-500">
+                        Мы используем указанный номер телефона для звонка или сообщения.
+                      </p>
+                    </div>
                     <label className="flex cursor-pointer items-start gap-3">
                       <input
                         type="checkbox"
@@ -763,25 +992,87 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
               )}
 
             </div>
+
+            {/* ── Bottom progress + navigation ── */}
+            {!isContactsStep && (
+              <div className="border-t border-slate-100 bg-slate-50/60 px-6 py-4 sm:px-8">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex-1">
+                    <div className="mb-1.5 flex items-center justify-between text-xs font-medium text-slate-500">
+                      <span>Готово: {progressPercent}%</span>
+                      <span>
+                        Шаг {currentIndex + 1} из {totalSteps}
+                      </span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
+                      <div
+                        className="h-full bg-primary-500 transition-all duration-300"
+                        style={{ width: `${progressPercent}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-3 hidden justify-end gap-3 sm:flex sm:mt-0">
+                    {!isFirst && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="rounded-full px-4"
+                        onClick={goBack}
+                      >
+                        {QUIZ_MICROCOPY.back}
+                      </Button>
+                    )}
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="rounded-full px-6"
+                      onClick={stepNextHandler}
+                    >
+                      {QUIZ_MICROCOPY.next}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Mobile sticky bottom CTA (area / rooms / extras steps only) */}
-          {!isContactsStep && stepId !== 'type' && stepId !== 'urgency' && (
-            <div className="mt-6 sticky bottom-[76px] left-0 right-0 z-50 p-2 bg-white/95 backdrop-blur sm:hidden rounded-xl border border-slate-200 shadow-lg">
-              <Button
-                type="button"
-                onClick={mobileStickyNextHandler}
-                size="lg"
-                className="w-full rounded-xl"
-              >
-                {QUIZ_MICROCOPY.next}
-              </Button>
+          {/* Mobile sticky bottom CTA (area / rooms / extras / schedule steps) */}
+          {!isContactsStep && stepId !== 'type' && stepId !== 'place' && (
+            <div className="mt-6 sticky bottom-[76px] left-0 right-0 z-50 p-3 bg-white/95 backdrop-blur sm:hidden rounded-2xl border border-slate-200 shadow-lg">
+              <div className="mb-2 flex items-center justify-between text-xs font-medium text-slate-500">
+                <span>Готово: {progressPercent}%</span>
+                <span>
+                  Шаг {currentIndex + 1} из {totalSteps}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                {!isFirst && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="lg"
+                    className="w-24 rounded-xl"
+                    onClick={goBack}
+                  >
+                    {QUIZ_MICROCOPY.back}
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  onClick={stepNextHandler}
+                  size="lg"
+                  className={cn('flex-1 rounded-xl', isFirst && 'w-full')}
+                >
+                  {QUIZ_MICROCOPY.next}
+                </Button>
+              </div>
             </div>
           )}
         </div>
 
         <div className="hidden lg:block">
-          <QuizSummaryCard state={state} />
+          <QuizSummaryCard state={state} discount={discount} />
         </div>
       </div>
     </div>

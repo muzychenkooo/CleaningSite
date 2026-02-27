@@ -12,6 +12,70 @@ export const PHONE_DIGITS_COUNT = 11; // 7 + 10 digits
 export const DATE_MIN = '2026-01-01';
 export const DATE_MAX = '2100-12-31';
 
+type DateParts = { year: number; month: number; day: number };
+
+function isLeapYear(year: number): boolean {
+  if (year % 400 === 0) return true;
+  if (year % 100 === 0) return false;
+  return year % 4 === 0;
+}
+
+function daysInMonth(year: number, month: number): number {
+  if (month === 2) {
+    return isLeapYear(year) ? 29 : 28;
+  }
+  if ([1, 3, 5, 7, 8, 10, 12].includes(month)) return 31;
+  if ([4, 6, 9, 11].includes(month)) return 30;
+  return 0;
+}
+
+function parseISODateStrict(value: string): DateParts | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) return null;
+  if (year < 2026 || year > 2100) return null;
+  if (month < 1 || month > 12) return null;
+  const dim = daysInMonth(year, month);
+  if (day < 1 || day > dim) return null;
+  return { year, month, day };
+}
+
+function compareDateParts(a: DateParts, b: DateParts): number {
+  if (a.year !== b.year) return a.year - b.year;
+  if (a.month !== b.month) return a.month - b.month;
+  return a.day - b.day;
+}
+
+function getEffectiveDateMin(today = new Date()): DateParts {
+  const minParts = parseISODateStrict(DATE_MIN)!; // always valid
+  const maxParts = parseISODateStrict(DATE_MAX)!;
+
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const day = today.getDate();
+
+  const todayParts: DateParts = {
+    year,
+    month,
+    day: Math.min(day, daysInMonth(year, month)),
+  };
+
+  // If today is before the global minimum, stick to DATE_MIN.
+  if (compareDateParts(todayParts, minParts) < 0) {
+    return minParts;
+  }
+
+  // If today is after the global maximum, clamp to DATE_MAX.
+  if (compareDateParts(todayParts, maxParts) > 0) {
+    return maxParts;
+  }
+
+  return todayParts;
+}
+
 // ─── Cyrillic only (буквы кириллицы + запятая) ───
 const CYRILLIC_COMMA_REGEX_STRICT = /^[А-Яа-яЁё,]*$/;
 export function sanitizeCyrillic(
@@ -100,22 +164,28 @@ export const dateSchema = z
   .refine(
     (v) => {
       if (!v || v.trim() === '') return true;
-      const d = new Date(v);
-      const y = d.getFullYear();
-      return !isNaN(d.getTime()) && y >= 2026 && y <= 2100;
+      const parsed = parseISODateStrict(v);
+      if (!parsed) return false;
+      const min = getEffectiveDateMin();
+      return compareDateParts(parsed, min) >= 0;
     },
     { message: FORM_MESSAGES.dateInvalid }
   );
 
-const ALLOWED_MINUTES = [0, 10, 20, 30, 40, 50];
 export const timeSchema = z
   .string()
   .optional()
   .refine(
     (v) => {
       if (!v || v.trim() === '') return true;
-      const [h, m] = v.split(':').map(Number);
-      return h >= 0 && h <= 23 && !isNaN(m) && ALLOWED_MINUTES.includes(m);
+      const match = /^(\d{2}):(\d{2})$/.exec(v);
+      if (!match) return false;
+      const hour = Number(match[1]);
+      const minute = Number(match[2]);
+      if (!Number.isInteger(hour) || !Number.isInteger(minute)) return false;
+      if (hour < 0 || hour > 23) return false;
+      if (minute < 0 || minute > 59) return false;
+      return true;
     },
     { message: FORM_MESSAGES.timeInvalid }
   );
@@ -141,6 +211,9 @@ export const orderFormSchema = z.object({
   date: dateSchema,
   time: timeSchema,
   serviceType: serviceTypeSchema,
+  consent: z.literal(true, {
+    errorMap: () => ({ message: 'Необходимо согласие на обработку данных' }),
+  }),
   honeypot: z.string().max(0).optional(),
 });
 

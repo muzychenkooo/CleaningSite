@@ -83,10 +83,10 @@ export function VideoWithOverlay({
               }
         }
       >
-        {/* Play button — round circle with primary-colored triangle */}
+        {/* Play button — прозрачный круг с обводкой, как в "Видеоотзывы" */}
         <span
           aria-hidden
-          className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-primary-600 shadow-xl ring-2 ring-white/30 transition-all duration-200 group-hover:scale-110 group-hover:bg-white group-focus-visible:scale-110"
+          className="flex h-16 w-16 items-center justify-center rounded-full border border-white/90 bg-black/20 text-white shadow-lg backdrop-blur-sm transition-transform duration-200 group-hover:scale-110 group-focus-visible:scale-110 active:scale-95"
         >
           {/* Material "play_arrow" path */}
           <svg

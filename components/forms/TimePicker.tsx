@@ -101,21 +101,33 @@ function WheelColumn({
   onSelect,
   label,
   className,
+  initialScrollToTop = false,
 }: {
   items: string[];
   selectedIndex: number;
   onSelect: (index: number) => void;
   label?: string;
   className?: string;
+  /** На мобильном: не прокручивать к выбранному, оставить рулетку в верхнем положении */
+  initialScrollToTop?: boolean;
 }) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
+  const didInitialScrollRef = React.useRef(false);
 
   React.useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+    if (initialScrollToTop) {
+      if (!didInitialScrollRef.current) {
+        didInitialScrollRef.current = true;
+        el.scrollTop = 0;
+      }
+      return;
+    }
+    didInitialScrollRef.current = false;
     const targetScroll = selectedIndex * WHEEL_ITEM_HEIGHT;
     el.scrollTop = Math.max(0, targetScroll);
-  }, [selectedIndex]);
+  }, [initialScrollToTop, selectedIndex]);
 
   const handleScroll = React.useCallback(() => {
     const el = scrollRef.current;
@@ -243,7 +255,6 @@ export function TimePicker({ value, onChange, onBlur, error, className, id }: Ti
   );
 
   const [openPart, setOpenPart] = React.useState<'hour' | 'minute' | null>(null);
-  const [mobileOpen, setMobileOpen] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -259,37 +270,25 @@ export function TimePicker({ value, onChange, onBlur, error, className, id }: Ti
 
   const isMobile = useIsMobile();
 
-  // Lock background scroll while mobile wheel is open so picker does not "scroll away"
-  React.useEffect(() => {
-    if (!isMobile || !mobileOpen) return;
-    if (typeof document === 'undefined') return;
-    const { body } = document;
-    const prevOverflow = body.style.overflow;
-    body.style.overflow = 'hidden';
-    return () => {
-      body.style.overflow = prevOverflow;
-    };
-  }, [isMobile, mobileOpen]);
-
   return (
     <>
       <div ref={containerRef} className={cn('relative', className)}>
         {isMobile ? (
-          <button
-            type="button"
+          <input
             id={id}
-            onClick={() => setMobileOpen(true)}
-            onBlur={onBlur}
+            type="time"
             className={cn(
-              'flex h-10 w-full min-w-0 items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-left ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
-              error && 'border-red-500 focus-visible:ring-red-500',
+              'flex h-10 w-full min-w-0 items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-left ring-offset-white',
+              error && 'border-red-500',
               !value && 'text-slate-500'
             )}
-            aria-haspopup="dialog"
-            aria-expanded={mobileOpen}
-          >
-            {value ? toValue(hour, minute) : 'Часы · Минуты'}
-          </button>
+            min="00:00"
+            max="23:59"
+            step={60}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onBlur={onBlur}
+          />
         ) : (
           <div
             id={id}
@@ -346,53 +345,6 @@ export function TimePicker({ value, onChange, onBlur, error, className, id }: Ti
         )}
       </div>
 
-      {isMobile && mobileOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-40 bg-black/50"
-            aria-hidden
-            onClick={() => setMobileOpen(false)}
-          />
-          <div
-            className="fixed left-0 right-0 bottom-0 z-50 rounded-t-2xl border-t border-slate-200 bg-white shadow-xl safe-area-pb"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Выбор времени"
-          >
-            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-              <button
-                type="button"
-                className="text-slate-500 font-medium"
-                onClick={() => setMobileOpen(false)}
-              >
-                Отмена
-              </button>
-              <span className="font-semibold text-slate-900">Время</span>
-              <button
-                type="button"
-                className="text-primary-600 font-medium"
-                onClick={() => setMobileOpen(false)}
-              >
-                Готово
-              </button>
-            </div>
-            <div className="flex gap-2 px-2 py-4" style={{ height: 260 }}>
-              <WheelColumn
-                items={HOURS}
-                selectedIndex={hourIndex}
-                onSelect={handleHourChange}
-                label="Часы"
-              />
-              <WheelColumn
-                items={MINUTES}
-                selectedIndex={safeMinuteIndex}
-                onSelect={handleMinuteChange}
-                label="Минуты"
-              />
-            </div>
-          </div>
-        </>
-      )}
     </>
   );
 }

@@ -53,6 +53,7 @@ export function OrderForm({
       date: '',
       time: '',
       serviceType: '',
+      consent: false,
     },
   });
 
@@ -71,6 +72,7 @@ export function OrderForm({
         date: '',
         time: '',
         serviceType: '',
+        consent: false,
       });
       setSuccessOpen(true);
       onSuccess?.();
@@ -223,6 +225,30 @@ export function OrderForm({
               )}
             </div>
           </>
+        )}
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            className="mt-1 h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+            {...register('consent')}
+            aria-invalid={!!errors.consent}
+          />
+          <span className="text-sm text-slate-600">
+            Даю согласие на обработку персональных данных и связь по указанному телефону.{` `}
+            <a
+              href="/legal/"
+              className="text-primary-600 underline hover:text-primary-700"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Политика конфиденциальности
+            </a>
+          </span>
+        </label>
+        {errors.consent && (
+          <p className="text-sm text-red-600" role="alert">
+            {errors.consent.message}
+          </p>
         )}
         <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
           {submitting ? 'Отправка…' : submitLabel}

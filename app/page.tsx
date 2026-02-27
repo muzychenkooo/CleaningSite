@@ -7,6 +7,7 @@ import { TrustSection } from '@/components/home/trust-section';
 import { PromoSection } from '@/components/home/promo-section';
 import { ReviewsSection } from '@/components/home/reviews-section';
 import { VideoReviewsSection } from '@/components/home/video-reviews-section';
+import { LeaderMessageSection } from '@/components/home/leader-message-section';
 import { TeamSection } from '@/components/home/team-section';
 import { StepsSection } from '@/components/home/steps-section';
 import { FAQSection } from '@/components/home/faq-section';
@@ -23,16 +24,17 @@ export default function HomePage() {
       </Suspense>
       <ServicesSection />
       <AboutSection />
+      <StepsSection />
       <TrustSection />
       <PromoSection />
       <ReviewsSection />
       <VideoReviewsSection />
+      <LeaderMessageSection />
       <TeamSection />
-      <StepsSection />
-      <FAQSection />
       <ContactQuestionsSection />
       <GallerySection />
       <ContactCtaSection />
+      <FAQSection />
     </div>
   );
 }
