@@ -6,9 +6,10 @@ export type TeamMember = {
 };
 
 // Базовое ядро команды — клинеры (одного убрали по просьбе заказчика)
+// Фото должны лежать в public/assets/team/… чтобы корректно отдаваться Next.js
 export const teamMembers: TeamMember[] = [
-  { id: '1', name: 'Ирина Григорьева', role: 'Клинер', photo: '/assets/team/ирина.jpg' },
-  { id: '2', name: 'Галина Кравченко', role: 'Клинер', photo: '/assets/team/галина.jpg' },
-  { id: '3', name: 'Инга Юдина', role: 'Клинер', photo: '/assets/team/инга.jpg' },
-  { id: '4', name: 'Мария Смирнова', role: 'Клинер', photo: '/assets/team/мария.jpg' },
+  { id: '1', name: 'Ирина', role: 'Клинер', photo: '/assets/team/клинер1.png' },
+  { id: '2', name: 'Галина', role: 'Клинер', photo: '/assets/team/клинер2.png' },
+  { id: '3', name: 'Инга', role: 'Клинер', photo: '/assets/team/клинер3.png' },
+  { id: '4', name: 'Сергей', role: 'Клинер', photo: '/assets/team/клинер4.png' },
 ];

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { Container } from '@/components/layout/container';
 import { OrderForm } from '@/components/forms/order-form';
+import { SocialIconLinks } from '@/components/ui/social-icon-links';
 import { site } from '@/data/site';
 
 const baseUrl = 'https://bigyborka.ru';
@@ -47,23 +48,9 @@ export default function ContactsPage() {
             </div>
 
             <h2 className="mt-8 text-lg font-semibold text-slate-900">Мессенджеры</h2>
-            <ul className="mt-2 flex flex-wrap gap-4">
-              <li>
-                <a href={site.social.whatsapp} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">
-                  WhatsApp
-                </a>
-              </li>
-              <li>
-                <a href={site.social.vk} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">
-                  VK
-                </a>
-              </li>
-              <li>
-                <a href={site.social.telegram} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">
-                  Telegram
-                </a>
-              </li>
-            </ul>
+            <div className="mt-2">
+              <SocialIconLinks size="md" />
+            </div>
 
             <section className="mt-10">
               <h2 className="text-lg font-semibold text-slate-900">Реквизиты</h2>

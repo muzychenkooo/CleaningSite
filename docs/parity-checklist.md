@@ -36,7 +36,7 @@ Reference: https://bigyborka.ru/
 
 ## Key elements
 
-- Header: phone, email, schedule, Whatsapp/Vk/Telegram, Обратный звонок, Рассчитать цену, Menu (mobile) ✅
+- Header: phone, email, schedule, MAX/Vk/Telegram, Обратный звонок, Рассчитать цену, Menu (mobile) ✅
 - Footer: контакты, навигация, правовая информация ✅
 - Sticky mobile CTA ✅
 - Forms: Order/Callback (zod, react-hook-form, honeypot), Calculator ✅

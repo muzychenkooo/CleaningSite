@@ -237,7 +237,7 @@ export function OrderForm({
             Даю согласие на обработку персональных данных и связь по указанному телефону.{` `}
             <a
               href="/legal/"
-              className="text-primary-600 underline hover:text-primary-700"
+              className="font-semibold text-primary-600 hover:text-primary-700"
               target="_blank"
               rel="noopener noreferrer"
             >

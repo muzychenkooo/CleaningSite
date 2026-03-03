@@ -4,7 +4,8 @@
 
 @layer base {
   :root {
-    /* Manrope (display) + Inter (body) applied via Tailwind font-sans/font-display */
+    /* Montserrat для всего сайта (font-sans и font-display) */
+    --font-display: var(--font-sans);
     --color-primary: 37 99 235;
     --color-primary-foreground: 255 255 255;
     --brand-primary: #1d4ed8;
@@ -25,10 +26,11 @@
     }
   }
   html {
-    @apply scroll-smooth overflow-x-hidden;
+    @apply scroll-smooth overflow-x-hidden m-0 p-0;
   }
   body {
-    @apply bg-white text-slate-900 antialiased overflow-x-hidden min-w-0;
+    @apply text-slate-900 antialiased overflow-x-hidden min-w-0 m-0 p-0;
+    background-color: #f8fafc; /* slate-50 — убирает белую полосу под футером */
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   body.no-scroll {
@@ -36,7 +38,7 @@
   }
   /* Prevent horizontal scroll from flex/grid children; fix root causes in components. */
   main {
-    @apply min-w-0 w-full;
+    @apply min-w-0 w-full bg-white;
   }
   @media (prefers-reduced-motion: reduce) {
     html {
@@ -65,9 +67,49 @@
   }
 }
 
+@keyframes hero-bubble-rise {
+  0% {
+    transform: translateY(100vh) scale(1);
+    opacity: 0.25;
+  }
+  15% {
+    opacity: 0.5;
+  }
+  85% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-100vh) scale(0.85);
+    opacity: 0.2;
+  }
+}
+
 @layer components {
   .hero-gradient {
     background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-to) 50%, #0d2444 100%);
+  }
+  .hero-bubble {
+    animation: hero-bubble-rise linear infinite;
+    will-change: transform;
+    /* Естественный вид: градиент с бликом, обводка, лёгкое свечение */
+    background: radial-gradient(
+      circle at 32% 28%,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.2) 28%,
+      rgba(255, 255, 255, 0.06) 55%,
+      transparent 72%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow:
+      inset 3px 3px 10px rgba(255, 255, 255, 0.12),
+      inset -1px -1px 4px rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(2px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bubble {
+      animation: none;
+      opacity: 0.35;
+    }
   }
   /* Hero: occupy almost full viewport height under sticky header */
   .hero-full {
@@ -82,6 +124,13 @@
     .carousel-arrow {
       display: none;
     }
+  }
+  /* Мобильный sticky CTA: плавное появление/скрытие при открытом меню */
+  .sticky-cta-bar {
+    @apply transition-all duration-200 ease-out translate-y-0 opacity-100;
+  }
+  body.mobile-menu-open .sticky-cta-bar {
+    @apply translate-y-full opacity-0 pointer-events-none;
   }
 }
 

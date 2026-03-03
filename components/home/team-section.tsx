@@ -21,9 +21,24 @@ function buildExtendedTeam(all: TeamMember[], visible: number) {
 export function TeamSection() {
   // 4 клинера + 2 бригадира + 1 офис-менеджер
   const managementSlots: TeamMember[] = [
-    { id: 'lead-1', name: 'Бригадир', role: 'Бригадир' },
-    { id: 'lead-2', name: 'Бригадир', role: 'Бригадир' },
-    { id: 'office-1', name: 'Офис-менеджер', role: 'Офис-менеджер' },
+    {
+      id: 'lead-1',
+      name: 'Иван',
+      role: 'Бригадир',
+      photo: '/assets/team/бригадир2.png',
+    },
+    {
+      id: 'lead-2',
+      name: 'Юлия',
+      role: 'Бригадир',
+      photo: '/assets/team/бригадир1.png',
+    },
+    {
+      id: 'office-1',
+      name: 'Светлана',
+      role: 'Офис-менеджер',
+      photo: '/assets/team/менеджер.png',
+    },
   ];
 
   const allMembers: TeamMember[] = React.useMemo(
@@ -31,14 +46,14 @@ export function TeamSection() {
     [],
   );
 
-  // На десктопе показываем 3 карточки, на планшете 2, на мобиле 1
-  const [visibleCount, setVisibleCount] = React.useState(3);
-  const visibleRef = React.useRef(3);
+  // На десктопе показываем 4 карточки, на планшете 2, на мобиле 1
+  const [visibleCount, setVisibleCount] = React.useState(4);
+  const visibleRef = React.useRef(4);
 
-  const [offset, setOffset] = React.useState(3);
+  const [offset, setOffset] = React.useState(4);
   const [animated, setAnimated] = React.useState(true);
   const [busy, setBusy] = React.useState(false);
-  const offsetRef = React.useRef(3);
+  const offsetRef = React.useRef(4);
 
   const { extended: EXTENDED, clone: CLONE } = buildExtendedTeam(allMembers, visibleCount);
   const EXT_LEN = EXTENDED.length;
@@ -64,7 +79,7 @@ export function TeamSection() {
   React.useEffect(() => {
     function update() {
       const w = window.innerWidth;
-      const v = w < 640 ? 1 : w < 1024 ? 2 : 3;
+      const v = w < 640 ? 1 : w < 1024 ? 2 : 4;
       if (v === visibleRef.current) return;
       visibleRef.current = v;
       const { initOffset } = buildExtendedTeam(allMembers, v);
@@ -178,15 +193,20 @@ export function TeamSection() {
                     style={{ width: `${(1 / EXT_LEN) * 100}%` }}
                     className="shrink-0 px-1 sm:px-2"
                   >
-                    <div className="h-full rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm">
-                      <div className="mx-auto h-24 w-24 rounded-full overflow-hidden bg-slate-200 ring-2 ring-slate-100 flex items-center justify-center">
+                    <div className="h-full rounded-xl border border-slate-200 bg-white p-3 text-center shadow-sm">
+                      <div className="mx-auto w-full max-w-[160px] h-40 rounded-2xl overflow-hidden bg-slate-200 ring-2 ring-slate-100 flex items-center justify-center">
                         {member.photo ? (
                           <Image
                             src={assetUrl(member.photo)}
                             alt={member.name}
-                            width={96}
-                            height={96}
-                            className="h-full w-full object-cover object-top"
+                            width={160}
+                            height={200}
+                            className="h-full w-full object-cover"
+                            style={
+                              member.name === 'Галина' || member.name === 'Сергей' || member.name === 'Иван'
+                                ? { objectPosition: '50% 20%' }
+                                : undefined
+                            }
                             loading="lazy"
                           />
                         ) : (
@@ -195,7 +215,7 @@ export function TeamSection() {
                           </span>
                         )}
                       </div>
-                      <p className="mt-3 font-semibold text-slate-900">{member.name}</p>
+                      <p className="mt-3 text-base font-semibold text-slate-900">{member.name}</p>
                       <p className="text-sm text-slate-500">{member.role}</p>
                     </div>
                   </div>

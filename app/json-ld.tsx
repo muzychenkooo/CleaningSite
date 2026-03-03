@@ -15,7 +15,7 @@ export function LocalBusinessJsonLd() {
     openingHours: 'Mo-Su 00:00-23:59',
     url: baseUrl,
     priceRange: '₽₽',
-    sameAs: [site.social.whatsapp, site.social.vk, site.social.telegram].filter(Boolean),
+    sameAs: [site.social.max, site.social.vk, site.social.telegram].filter(Boolean),
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Услуги клининга',

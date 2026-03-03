@@ -29,7 +29,7 @@ export function HeaderCtas({ variant, phoneDisplay }: Props) {
           <Link href="/?open=quiz#rasschet">{site.cta.calculateShort}</Link>
         </Button>
         <Button asChild size="sm" className="shrink-0 whitespace-nowrap" variant="outline">
-          <Link href="/#zayavka">{site.cta.callback}</Link>
+          <Link href="/#contact-questions">{site.cta.callback}</Link>
         </Button>
       </div>
     );
@@ -55,7 +55,7 @@ export function HeaderCtas({ variant, phoneDisplay }: Props) {
         <Link href="/?open=quiz#rasschet">{site.cta.calculateShort}</Link>
       </Button>
       <Button asChild size="sm" className="hidden whitespace-nowrap md:inline-flex" variant="outline">
-        <Link href="/#zayavka">{site.cta.callback}</Link>
+        <Link href="/#contact-questions">{site.cta.callback}</Link>
       </Button>
     </div>
   );

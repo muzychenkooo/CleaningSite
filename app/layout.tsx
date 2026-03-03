@@ -1,18 +1,14 @@
 import type { Metadata } from 'next';
-import { Manrope, Inter } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { StickyCta } from '@/components/layout/sticky-cta';
+import { CookieBanner } from '@/components/layout/cookie-banner';
 import { site } from '@/data/site';
 import { LocalBusinessJsonLd } from './json-ld';
 
-const manrope = Manrope({
-  subsets: ['latin', 'cyrillic'],
-  display: 'swap',
-  variable: '--font-display',
-});
-const inter = Inter({
+const montserrat = Montserrat({
   subsets: ['latin', 'cyrillic'],
   display: 'swap',
   variable: '--font-sans',
@@ -46,17 +42,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" className={`${manrope.variable} ${inter.variable}`}>
+    <html lang="ru" className={montserrat.variable}>
       <head>
         {/* Security hardening: referrer policy */}
         <meta name="referrer" content="strict-origin-when-cross-origin" />
       </head>
-      <body className="min-h-screen flex flex-col font-sans antialiased">
+      <body className="min-h-screen flex flex-col font-sans antialiased m-0 p-0 lg:pt-[6.5rem]">
         <LocalBusinessJsonLd />
         <Header />
-        <main className="flex-1 pb-20 sm:pb-0">{children}</main>
-        <Footer />
+        <main className="flex-1 flex flex-col pb-20 sm:pb-0">{children}</main>
+        <div className="mt-auto bg-slate-50">
+          <Footer />
+        </div>
         <StickyCta />
+        <CookieBanner />
       </body>
     </html>
   );

@@ -21,7 +21,7 @@ export function ServicesSection() {
         </h2>
         <div className="mt-10">
           <div
-            className="inline-flex flex-wrap gap-1.5 rounded-xl bg-slate-100 p-1.5 text-slate-600 min-w-0 max-w-full"
+            className="inline-flex flex-col gap-1.5 rounded-xl bg-slate-100 p-1.5 text-slate-600 min-w-0 max-w-full sm:inline-flex sm:flex-row"
             role="tablist"
             aria-label="Категория услуг"
           >
@@ -31,8 +31,10 @@ export function ServicesSection() {
               aria-selected={activeTab === 'individuals'}
               onClick={() => setActiveTab('individuals')}
               className={cn(
-                'inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
-                activeTab === 'individuals' ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200/80' : 'hover:bg-white/60',
+                'inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium min-w-[13rem] max-w-full text-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
+                activeTab === 'individuals'
+                  ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200/80'
+                  : 'hover:bg-white/60',
               )}
             >
               Для частных клиентов
@@ -43,11 +45,13 @@ export function ServicesSection() {
               aria-selected={activeTab === 'business'}
               onClick={() => setActiveTab('business')}
               className={cn(
-                'inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
-                activeTab === 'business' ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200/80' : 'hover:bg-white/60',
+                'inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium min-w-[13rem] max-w-full text-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
+                activeTab === 'business'
+                  ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200/80'
+                  : 'hover:bg-white/60',
               )}
             >
-              Для бизнеса
+              Для организаций
             </button>
           </div>
           {/* Подзаголовок под переключателем */}
@@ -58,17 +62,18 @@ export function ServicesSection() {
               <>
                 <div className="grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   {individuals.map((s) => (
-                    <Card key={s.id} className="flex flex-col rounded-2xl border-slate-200 overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 motion-reduce:transform-none">
-                      <CardContent className="pt-2 pb-4 sm:pt-5 sm:pb-6 flex-1">
-                        <CardTitle className="text-base font-semibold leading-snug">{s.title}</CardTitle>
-                        <p className="mt-1 text-sm text-slate-600 line-clamp-3 leading-relaxed">{s.shortDesc}</p>
-                      </CardContent>
-                      <CardFooter className="pt-0 pb-4 sm:pb-6">
-                        <Button asChild variant="ghost" size="sm" className="p-0 h-auto font-medium text-primary-600 hover:text-primary-700">
-                          <Link href={`/uslugi/${s.slug}`}>Узнать больше</Link>
-                        </Button>
-                      </CardFooter>
-                    </Card>
+                    <Link
+                      key={s.id}
+                      href={`/uslugi/${s.slug}/`}
+                      className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded-2xl"
+                    >
+                      <Card className="flex h-full flex-col rounded-2xl border-slate-200 overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 motion-reduce:transform-none">
+                        <CardContent className="pt-2 pb-5 sm:pt-5 sm:pb-6 flex-1">
+                          <CardTitle className="text-base font-semibold leading-snug">{s.title}</CardTitle>
+                          <p className="mt-1 text-sm text-slate-600 leading-relaxed">{s.shortDesc}</p>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   ))}
                 </div>
                 <div className="mt-6">
@@ -82,17 +87,18 @@ export function ServicesSection() {
               <>
                 <div className="grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   {business.map((s) => (
-                    <Card key={s.id} className="flex flex-col rounded-2xl border-slate-200 overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 motion-reduce:transform-none">
-                      <CardContent className="pt-2 pb-4 sm:pt-5 sm:pb-6 flex-1">
-                        <CardTitle className="text-base font-semibold leading-snug">{s.title}</CardTitle>
-                        <p className="mt-1 text-sm text-slate-600 line-clamp-3 leading-relaxed">{s.shortDesc}</p>
-                      </CardContent>
-                      <CardFooter className="pt-0 pb-4 sm:pb-6">
-                        <Button asChild variant="ghost" size="sm" className="p-0 h-auto font-medium text-primary-600 hover:text-primary-700">
-                          <Link href={`/uslugi/${s.slug}`}>Узнать больше</Link>
-                        </Button>
-                      </CardFooter>
-                    </Card>
+                    <Link
+                      key={s.id}
+                      href={`/uslugi/${s.slug}/`}
+                      className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded-2xl"
+                    >
+                      <Card className="flex h-full flex-col rounded-2xl border-slate-200 overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 motion-reduce:transform-none">
+                        <CardContent className="pt-2 pb-5 sm:pt-5 sm:pb-6 flex-1">
+                          <CardTitle className="text-base font-semibold leading-snug">{s.title}</CardTitle>
+                          <p className="mt-1 text-sm text-slate-600 leading-relaxed">{s.shortDesc}</p>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   ))}
                 </div>
                 <div className="mt-6">

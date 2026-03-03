@@ -136,7 +136,7 @@ export default function PricesPage() {
         {/* CTA */}
         <div className="mt-8 flex flex-wrap gap-4">
           <Button asChild size="lg">
-            <Link href="/quiz/">{site.cta.calculate}</Link>
+            <Link href="/#zayavka">{site.cta.calculate}</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
             <a href={`tel:${site.phoneRaw}`}>Позвонить для расчёта</a>

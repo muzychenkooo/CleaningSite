@@ -1,22 +1,20 @@
 'use client';
 
 import { Container } from '@/components/layout/container';
-import { OrderForm } from '@/components/forms/order-form';
+import { DetailedCalculator } from '@/components/calculator/DetailedCalculator';
 
 export function ContactCtaSection() {
   return (
     <section className="w-full py-16 sm:py-24 bg-slate-50">
       <Container>
-        <div className="max-w-xl">
-          <h2 id="zayavka" className="font-display text-3xl font-bold text-slate-900 scroll-mt-24">
-            Оформить заявку
-          </h2>
-          <p className="mt-2 text-slate-600">
-            Решили воспользоваться нашими услугами? Прекрасный выбор! Скорее заполняйте форму и мы с вами обговорим детали.
-          </p>
-          <div className="mt-8">
-            <OrderForm />
-          </div>
+        <h2 id="zayavka" className="font-display text-3xl font-bold text-slate-900 scroll-mt-24">
+          Подробный калькулятор
+        </h2>
+        <p className="mt-2 text-slate-600 max-w-2xl">
+          Для вашего удобства мы создали подробный калькулятор. Ответьте на вопросы и получите максимально приближенную к реальности цену, а затем мы с вами свяжемся и договоримся о встрече.
+        </p>
+        <div className="mt-8 max-w-3xl">
+          <DetailedCalculator />
         </div>
       </Container>
     </section>

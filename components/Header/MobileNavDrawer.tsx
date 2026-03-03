@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { site } from '@/data/site';
 import { Button } from '@/components/ui/button';
+import { SocialIconLinks } from '@/components/ui/social-icon-links';
 import { cn } from '@/lib/utils';
 
 function isActive(pathname: string, href: string, prefixMatch = false): boolean {
@@ -32,7 +33,6 @@ const navLinkActive = 'bg-primary-50 text-primary-700 ring-1 ring-primary-100';
 export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const pathname = usePathname() ?? '';
-  const scrollYRef = React.useRef(0);
   const [mounted, setMounted] = React.useState(false);
 
   // Ensure we only access document in the browser
@@ -50,7 +50,7 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  // Body scroll lock (iOS-safe on mobile/tablet): fix body, store scroll position, restore on close
+  // Body scroll lock: disable background scroll while меню открыто
   React.useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
     if (!open) return;
@@ -59,25 +59,18 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
     if (window.innerWidth >= 1280) return;
 
     const { body, documentElement: html } = document;
-    const scrollY = window.scrollY || window.pageYOffset || 0;
-    scrollYRef.current = scrollY;
 
     const prevHtmlOverflow = html.style.overflow;
-    const prevPosition = body.style.position;
-    const prevTop = body.style.top;
-    const prevWidth = body.style.width;
+    const prevBodyOverflow = body.style.overflow;
 
     html.style.overflow = 'hidden';
-    body.style.position = 'fixed';
-    body.style.top = `-${scrollY}px`;
-    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+    body.classList.add('mobile-menu-open');
 
     return () => {
       html.style.overflow = prevHtmlOverflow;
-      body.style.position = prevPosition;
-      body.style.top = prevTop;
-      body.style.width = prevWidth;
-      window.scrollTo(0, scrollYRef.current);
+      body.style.overflow = prevBodyOverflow;
+      body.classList.remove('mobile-menu-open');
     };
   }, [open]);
 
@@ -137,6 +130,11 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
           'mobileMenuModal fixed inset-0 z-[60] flex min-h-screen items-center justify-center px-4 xl:hidden',
           open ? 'pointer-events-auto' : 'pointer-events-none'
         )}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            onClose();
+          }
+        }}
         role="dialog"
         aria-modal="true"
         aria-label="Меню"
@@ -182,12 +180,14 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
               className={cn(
                 navLinkBase,
                 'font-semibold',
-                isActive(pathname, '/business/', true) ? navLinkActive : 'text-slate-900 hover:bg-slate-100 hover:text-primary-600'
+                isActive(pathname, '/business/', true)
+                  ? navLinkActive
+                  : 'text-slate-900 hover:bg-slate-100 hover:text-primary-600'
               )}
               onClick={onClose}
               aria-current={isActive(pathname, '/business/', true) ? 'page' : undefined}
             >
-              Для бизнеса
+              Организациям
             </Link>
 
             <hr className="my-2 border-slate-200" />
@@ -213,18 +213,29 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
 
             <hr className="my-2 border-slate-200" />
 
-            <a
-              href={`tel:${site.phoneRaw}`}
-              className="block rounded-md px-3 py-2 font-medium text-primary-600 hover:bg-slate-50"
-            >
-              {phoneDisplay}
-            </a>
+            <div className="mt-1 flex flex-wrap items-center justify-between gap-3 rounded-md px-3 py-2 hover:bg-slate-50">
+              <a
+                href={`tel:${site.phoneRaw}`}
+                className="font-medium text-primary-600"
+                onClick={onClose}
+              >
+                {phoneDisplay}
+              </a>
+              <SocialIconLinks size="sm" />
+            </div>
 
-            <Button asChild className="mt-3">
-              <Link href="/?open=quiz#rasschet" onClick={onClose}>
-                {site.cta.calculate}
-              </Link>
-            </Button>
+            <div className="mt-3 grid grid-cols-1 min-[380px]:grid-cols-2 gap-3">
+              <Button asChild size="lg" className="rounded-xl">
+                <Link href="/#zayavka" onClick={onClose}>
+                  Калькулятор
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="rounded-xl border-2">
+                <Link href="/#promo-form" onClick={onClose}>
+                  Заявка
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

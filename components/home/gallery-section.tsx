@@ -12,7 +12,6 @@ import { assetUrl } from '@/lib/asset-url';
 const galleryPhotos = [
   { src: '/assets/gallery/1000004534.jpg', alt: 'Уборка — фото 1' },
   { src: '/assets/gallery/1000006679.jpg', alt: 'Уборка — фото 2' },
-  { src: '/assets/gallery/posle-remonta.jpg', alt: 'После ремонта' },
   { src: '/assets/gallery/20220806.jpg', alt: 'Уборка — фото 5' },
   { src: '/assets/gallery/20250219.jpg', alt: 'Уборка — фото 6' },
   { src: '/assets/gallery/20250709.jpg', alt: 'Уборка — фото 7' },
@@ -205,7 +204,7 @@ export function GallerySection() {
 
         {/* ── Фото с места ── */}
         <h2 className="font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-          Фото с места
+          Мы в процессе
         </h2>
 
         <div className="mt-6 relative">
@@ -324,9 +323,9 @@ export function GallerySection() {
           />
         </div>
 
-        {/* ── Последние новости ── */}
+        {/* ── Выполненные работы ── */}
         <h2 className="font-display mt-16 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-          Последние новости
+          Выполненные работы
         </h2>
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {displayedReports.map((report) => (
@@ -351,9 +350,6 @@ export function GallerySection() {
                   >
                     Читать далее
                   </Link>
-                  <p className="text-xs text-slate-600 text-right sm:text-sm">
-                    {report.date}
-                  </p>
                 </div>
               </div>
             </div>

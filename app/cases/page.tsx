@@ -37,7 +37,7 @@ export default function CasesPage() {
           Больше примеров — в галерее на главной и по запросу. Оставьте заявку, чтобы обсудить ваш объект.
         </p>
         <Button asChild className="mt-6">
-          <Link href="/?open=quiz#rasschet">{site.cta.calculate}</Link>
+          <Link href="/#zayavka">{site.cta.calculate}</Link>
         </Button>
       </Container>
     </div>

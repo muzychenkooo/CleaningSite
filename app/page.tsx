@@ -24,8 +24,8 @@ export default function HomePage() {
       </Suspense>
       <ServicesSection />
       <AboutSection />
-      <StepsSection />
       <TrustSection />
+      <StepsSection />
       <PromoSection />
       <ReviewsSection />
       <VideoReviewsSection />

@@ -971,7 +971,7 @@ export function QuizWizard({ onSuccessClose }: QuizWizardProps = {}) {
                         {stepConfig.consentText}{' '}
                         <a
                           href={stepConfig.consentLinkHref}
-                          className="text-primary-600 underline hover:text-primary-700"
+                          className="font-semibold text-primary-600 hover:text-primary-700"
                           target="_blank"
                           rel="noopener noreferrer"
                         >

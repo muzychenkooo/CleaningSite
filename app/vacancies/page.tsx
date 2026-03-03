@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { Container } from '@/components/layout/container';
+import { SocialIconLinks } from '@/components/ui/social-icon-links';
 import { site } from '@/data/site';
 
 const baseUrl = 'https://bigyborka.ru';
@@ -109,15 +110,8 @@ export default function VacanciesPage() {
           </div>
 
           {/* CTA */}
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href={site.social.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
-            >
-              Написать в WhatsApp
-            </a>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <SocialIconLinks size="lg" />
             <a
               href={`tel:${site.phoneRaw}`}
               className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
@@ -178,14 +172,7 @@ export default function VacanciesPage() {
             >
               ✉️ {site.email}
             </a>
-            <a
-              href={site.social.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 hover:text-primary-600"
-            >
-              WhatsApp
-            </a>
+            <SocialIconLinks size="md" />
           </div>
         </section>
       </Container>

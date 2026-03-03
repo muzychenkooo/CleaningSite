@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { site } from '@/data/site';
+import { SocialIconLinks } from '@/components/ui/social-icon-links';
 import { Container } from './container';
 import { assetUrl } from '@/lib/asset-url';
 
@@ -22,6 +23,15 @@ export function Footer() {
           <div className="min-w-0 max-w-[13rem] order-1 xl:order-1">
             <p className="font-semibold text-slate-900">{site.name}</p>
             <p className="mt-2 text-sm text-slate-600">{site.description}</p>
+            <Link href="/" aria-label={`${site.name} — на главную`} className="mt-4 block">
+              <Image
+                src={assetUrl('/assets/logo/new_logo.png')}
+                alt={site.name}
+                width={280}
+                height={80}
+                className="h-28 w-auto object-contain"
+              />
+            </Link>
           </div>
 
           {/* Col 2 (mobile order 2, desktop 4): Contacts */}
@@ -38,15 +48,28 @@ export function Footer() {
                   {site.email}
                 </a>
               </li>
-              <li className="flex flex-wrap gap-3 pt-1">
-                <a href={site.social.whatsapp} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-600 hover:text-primary-600" aria-label="WhatsApp">
-                  WhatsApp
+              <li className="flex flex-wrap items-center gap-1 pt-1">
+                <SocialIconLinks size="sm" />
+              </li>
+              <li className="pt-1 font-semibold text-slate-900 text-sm">Адрес:</li>
+              <li>
+                <a
+                  href={`https://yandex.ru/maps/?text=${encodeURIComponent('Московская область, Ленинский городской округ, село Беседы, ул. Ленинская, 1Б')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-slate-600 hover:text-primary-600 no-underline"
+                >
+                  Московская область, Ленинский городской округ, село Беседы, ул. Ленинская, 1Б
                 </a>
-                <a href={site.social.vk} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-600 hover:text-primary-600" aria-label="VK">
-                  Vk
-                </a>
-                <a href={site.social.telegram} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-600 hover:text-primary-600" aria-label="Telegram">
-                  Telegram
+              </li>
+              <li>
+                <a
+                  href={`https://yandex.ru/maps/?text=${encodeURIComponent('Москва, Профсоюзная улица, 93А')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-slate-600 hover:text-primary-600 no-underline"
+                >
+                  Москва, Профсоюзная улица, 93А
                 </a>
               </li>
             </ul>
@@ -66,9 +89,9 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Col 4 (mobile order 4, desktop 3): Для бизнеса — 7 пунктов + «Другое» на /business/ */}
+          {/* Col 4 (mobile order 4, desktop 3): Организациям — 7 пунктов + «Другое» на /business/ */}
           <div className="order-4 xl:order-3">
-            <p className="font-semibold text-slate-900">Для бизнеса</p>
+            <p className="font-semibold text-slate-900">Организациям</p>
             <ul className="mt-2 space-y-1">
               {footerBusinessItems.map((item) => (
                 <li key={item.href}>
@@ -86,19 +109,6 @@ export function Footer() {
           <p className="text-sm text-slate-500 text-center sm:text-left">
             © {new Date().getFullYear()} {site.legal.companyName}. {site.legal.rights}.
           </p>
-
-          {/* Desktop-only logo in the center */}
-          <div className="hidden md:flex flex-1 justify-center">
-            <Link href="/" aria-label="Большая Уборка — на главную">
-              <Image
-                src={assetUrl('/assets/logo/new_logo.png')}
-                alt={site.name}
-                width={280}
-                height={80}
-                className="h-16 w-auto object-contain"
-              />
-            </Link>
-          </div>
 
           <div className="flex flex-wrap justify-center gap-5 sm:justify-end">
             <Link href="/vacancies/" className="text-sm text-slate-500 hover:text-primary-600">

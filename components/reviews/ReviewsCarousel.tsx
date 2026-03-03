@@ -335,49 +335,29 @@ export function ReviewsCarousel() {
     <div>
       {/* ── Top controls ───────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          {/* Platform filter pills */}
-          <div className="flex flex-wrap items-center gap-2">
-            <PlatformPill
-              platform="all"
-              label="Все отзывы"
-              active={activePlatform === 'all'}
-              onClick={() => setActivePlatform('all')}
-            />
-            {uniquePlatforms.map((p) => {
-              const cfg = PLATFORM_CONFIG[p];
-              return (
-                <PlatformPill
-                  key={p}
-                  platform={p}
-                  label={cfg.label}
-                  rating={cfg.rating}
-                  icon={cfg.icon}
-                  active={activePlatform === p}
-                  onClick={() => setActivePlatform(p)}
-                />
-              );
-            })}
-          </div>
-
-          {/* Count line */}
-          <p className="mt-2 text-sm text-slate-500">
-            {activePlatform === 'all'
-              ? `${TOTAL_REVIEW_COUNT} ${pluralReviews(TOTAL_REVIEW_COUNT)} из ${uniquePlatforms.length} источников`
-              : `${PLATFORM_CONFIG[activePlatform].reviewCount} ${pluralReviews(PLATFORM_CONFIG[activePlatform].reviewCount)} на платформе`}
-          </p>
+        {/* Platform filter pills */}
+        <div className="flex flex-wrap items-center gap-2">
+          <PlatformPill
+            platform="all"
+            label="Все отзывы"
+            active={activePlatform === 'all'}
+            onClick={() => setActivePlatform('all')}
+          />
+          {uniquePlatforms.map((p) => {
+            const cfg = PLATFORM_CONFIG[p];
+            return (
+              <PlatformPill
+                key={p}
+                platform={p}
+                label={cfg.label}
+                rating={cfg.rating}
+                icon={cfg.icon}
+                active={activePlatform === p}
+                onClick={() => setActivePlatform(p)}
+              />
+            );
+          })}
         </div>
-
-        {/* Leave-review CTA */}
-        <a
-          href={LEAVE_REVIEW_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:border-primary-300 hover:text-primary-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-        >
-          Оставить отзыв
-          <ExternalLinkIcon />
-        </a>
       </div>
 
       {/* ── Carousel track ─────────────────────────────────────────────────── */}

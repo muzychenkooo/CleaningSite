@@ -220,7 +220,7 @@ Run at `/` (OrderForm full), `/contacts/` (OrderForm compact), and `/quiz/` (con
 ### External links
 - [ ] All `target="_blank"` links open in new tab
 - [ ] All `target="_blank"` links have `rel="noopener noreferrer"`
-- [ ] WhatsApp link opens `wa.me/…` correctly
+- [ ] MAX link opens max.ru/… correctly
 - [ ] Yandex/Google review links open correct platform pages
 
 ---

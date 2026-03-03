@@ -44,6 +44,24 @@ export default function PrivacyPage() {
             Компания несёт полную ответственность за имущество заказчика во время проведения уборки.
             Работы выполняют сотрудники с необходимым опытом и документами. Техника безопасности на объектах соблюдается.
           </p>
+          <h2 id="cookies" className="mt-8 text-xl font-semibold text-slate-900">Файлы cookie</h2>
+          <p>
+            Сайт может использовать файлы cookie для корректной работы и аналитики. Управлять cookie можно в настройках вашего браузера:
+          </p>
+          <ul className="list-inside list-disc space-y-1 text-slate-600">
+            <li>
+              <a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">Google Chrome</a>
+            </li>
+            <li>
+              <a href="https://support.mozilla.org/ru/kb/cookies-information-websites-store-on-your-computer" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">Mozilla Firefox</a>
+            </li>
+            <li>
+              <a href="https://support.apple.com/ru-ru/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">Safari</a>
+            </li>
+            <li>
+              <a href="https://support.microsoft.com/ru-ru/microsoft-edge/удаление-файлов-cookie-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">Microsoft Edge</a>
+            </li>
+          </ul>
           <h2 className="mt-8 text-xl font-semibold text-slate-900">Контакты</h2>
           <p>
             По вопросам сотрудничества и претензиям: {site.phone}, {site.email}.

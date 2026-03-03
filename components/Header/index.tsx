@@ -5,16 +5,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { site } from '@/data/site';
 import { Container } from '@/components/layout/container';
-import { Button } from '@/components/ui/button';
 import { Topbar } from './Topbar';
 import { MainNav } from './MainNav';
-import { HeaderCtas } from './HeaderCtas';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { assetUrl } from '@/lib/asset-url';
 
 /**
- * Шапка: верхняя полоса (Topbar) + основная строка (логотип | нав | CTA).
- * Сетка без наложений: логотип и CTA с фиксированной зоной, нав занимает остаток.
+ * Шапка: верхняя полоса (Topbar) + основная строка (логотип | навигация).
+ * Логотип и пункты меню равномерно на всю ширину контейнера.
  */
 export function Header() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -27,13 +25,13 @@ export function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 lg:fixed lg:left-0 lg:right-0">
       <Topbar />
 
-      {/* Основная строка: логотип слева, навигация + CTA-кнопки справа. */}
-      <Container className="header-container w-full min-w-0 max-w-[1536px]">
-        <div className="grid h-20 min-h-20 w-full min-w-0 grid-cols-[auto_1fr_auto] items-center gap-3 sm:gap-4 xl:gap-4">
-          {/* Логотип: изображение вместо текста */}
+      {/* Основная строка: логотип и навигация на всю ширину. */}
+      <Container className="header-container w-full min-w-0 max-w-[1760px] px-4 sm:px-6 lg:px-8">
+        <div className="grid h-20 min-h-20 w-full min-w-0 grid-cols-[auto_1fr] items-center gap-8 sm:h-[6rem] sm:min-h-[6rem] xl:gap-12">
+          {/* Логотип */}
           <Link
             href="/"
             className="flex shrink-0 items-center"
@@ -42,35 +40,20 @@ export function Header() {
             <Image
               src={assetUrl('/assets/logo/new_logo.png')}
               alt="Большая Уборка"
-              width={240}
-              height={72}
-              className="h-14 w-auto object-contain sm:h-16"
+              width={340}
+              height={102}
+              className="h-[5rem] w-auto object-contain sm:h-[6rem]"
               priority
             />
           </Link>
 
-          {/* Навигация: растягивается до правой границы контейнера */}
-          <div className="flex min-w-0 w-full overflow-visible">
+          {/* Навигация (десктоп) и бургер (мобильный) */}
+          <div className="flex min-w-0 flex-1 items-center justify-end overflow-visible xl:min-w-0">
             <MainNav />
-          </div>
-
-          {/* Десктоп: кнопки CTA справа от навигации */}
-          <div className="hidden xl:flex shrink-0 flex-nowrap items-center gap-2">
-            <Button asChild size="sm" className="shrink-0 whitespace-nowrap">
-              <Link href="/quiz/">{site.cta.calculateShort}</Link>
-            </Button>
-            <Button asChild size="sm" variant="outline" className="shrink-0 whitespace-nowrap">
-              <Link href="/#zayavka">{site.cta.callback}</Link>
-            </Button>
-          </div>
-
-          {/* Планшет/мобильный: CTA + бургер */}
-          <div className="flex min-w-0 flex-nowrap items-center justify-end gap-2 xl:hidden">
-            <HeaderCtas variant="mobile" phoneDisplay={phoneDisplay} />
             <button
               ref={burgerRef}
               type="button"
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 xl:hidden"
               onClick={() => setMobileOpen((v) => !v)}
               aria-expanded={mobileOpen}
               aria-label="Меню"

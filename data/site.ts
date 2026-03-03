@@ -11,9 +11,9 @@ export const site = {
   schedule: 'Круглосуточно',
   region: 'Москва и Московская область',
   social: {
-    whatsapp: 'https://wa.me/79957979996',
-    vk: '#',
-    telegram: '#',
+    max: 'https://max.ru/u/f9LHodD0cOIk4LHUyl4bX1qBfnkRZZ8-bySpswS1x0Tgo5t7mSOw8rmGPh0',
+    vk: 'https://vk.com/clearing_msk',
+    telegram: 'https://t.me/biguborka',
   },
   nav: {
     individuals: [

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Breadcrumbs, type BreadcrumbItem } from '@/components/layout/breadcrumbs';
 import { Container } from '@/components/layout/container';
 import { Button } from '@/components/ui/button';
+import { SocialIconLinks } from '@/components/ui/social-icon-links';
 import { site } from '@/data/site';
 
 type Props = {
@@ -24,21 +25,12 @@ export function ServiceHero({ breadcrumbs, title, intro }: Props) {
             <Link href="/quiz/">{site.cta.calculate}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href="/#callback">{site.cta.order}</Link>
+            <Link href="/#contact-questions">{site.cta.order}</Link>
           </Button>
           <Button asChild variant="outline">
             <a href={`tel:${site.phoneRaw}`}>Позвонить</a>
           </Button>
-          <Button asChild variant="outline">
-            <a href={site.social.whatsapp} target="_blank" rel="noopener noreferrer">
-              WhatsApp
-            </a>
-          </Button>
-          <Button asChild variant="outline">
-            <a href={site.social.telegram} target="_blank" rel="noopener noreferrer">
-              Telegram
-            </a>
-          </Button>
+          <SocialIconLinks size="md" className="inline-flex" />
         </div>
       </Container>
     </section>
