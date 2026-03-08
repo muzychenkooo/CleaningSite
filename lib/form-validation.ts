@@ -218,3 +218,19 @@ export const orderFormSchema = z.object({
 });
 
 export type OrderFormData = z.infer<typeof orderFormSchema>;
+
+// ─── Order cleaning block (расчёт / заказ уборки: тип объекта, вид уборки/мойки, площадь + контакты) ───
+export const orderCleaningFormSchema = z.object({
+  honeypot: z.string().max(0).optional(),
+  objectType: z.string().optional(),
+  cleaningType: z.string().optional(),
+  washingType: z.string().optional(),
+  area: z.coerce.number().min(0).default(0),
+  name: nameSchema,
+  phone: phoneSchema,
+  consent: z
+    .boolean()
+    .refine((v) => v === true, { message: 'Необходимо согласие на обработку данных' }),
+});
+
+export type OrderCleaningFormData = z.infer<typeof orderCleaningFormSchema>;

@@ -27,6 +27,18 @@
   }
   html {
     @apply scroll-smooth overflow-x-hidden m-0 p-0;
+    /* Мобильный — чуть меньший базовый шрифт */
+    font-size: 14px;
+  }
+  @media (min-width: 640px) and (max-width: 1023px) {
+    html {
+      font-size: 15px; /* Планшет — уменьшенный шрифт относительно ПК */
+    }
+  }
+  @media (min-width: 1024px) {
+    html {
+      font-size: 16px;
+    }
   }
   body {
     @apply text-slate-900 antialiased overflow-x-hidden min-w-0 m-0 p-0;
@@ -67,57 +79,23 @@
   }
 }
 
-@keyframes hero-bubble-rise {
-  0% {
-    transform: translateY(100vh) scale(1);
-    opacity: 0.25;
-  }
-  15% {
-    opacity: 0.5;
-  }
-  85% {
-    opacity: 0.5;
-  }
-  100% {
-    transform: translateY(-100vh) scale(0.85);
-    opacity: 0.2;
-  }
-}
-
 @layer components {
   .hero-gradient {
     background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-to) 50%, #0d2444 100%);
   }
-  .hero-bubble {
-    animation: hero-bubble-rise linear infinite;
-    will-change: transform;
-    /* Естественный вид: градиент с бликом, обводка, лёгкое свечение */
-    background: radial-gradient(
-      circle at 32% 28%,
-      rgba(255, 255, 255, 0.55) 0%,
-      rgba(255, 255, 255, 0.2) 28%,
-      rgba(255, 255, 255, 0.06) 55%,
-      transparent 72%
-    );
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    box-shadow:
-      inset 3px 3px 10px rgba(255, 255, 255, 0.12),
-      inset -1px -1px 4px rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(2px);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-bubble {
-      animation: none;
-      opacity: 0.35;
-    }
-  }
-  /* Hero: occupy almost full viewport height under sticky header */
+  /* Hero: мобильный и планшет — высота по контенту (все плашки видно); только ПК (lg+) — фиксированная высота */
   .hero-full {
-    min-height: calc(100vh - 4.5rem);
+    min-height: calc(100vh - 4.5rem - 5px);
+  }
+  @media (max-width: 1023px) {
+    .hero-full {
+      height: auto;
+    }
   }
   @media (min-width: 1024px) {
     .hero-full {
-      min-height: calc(100vh - 6.5rem); /* ~104px header (Topbar + main bar) */
+      height: calc(100vh - 6.5rem - 5px);
+      min-height: calc(100vh - 6.5rem - 5px);
     }
   }
   @media (max-width: 767px) {

@@ -10,14 +10,16 @@ export interface CyrillicInputProps extends Omit<React.InputHTMLAttributes<HTMLI
   onChange: (value: string) => void;
   maxLength?: number;
   error?: boolean;
-  /** Allow commas (e.g. for "Тип услуги") */
+  /** Allow commas (e.g. for "Тип услуги", Q7 Другое) */
   allowCommas?: boolean;
+  /** Allow spaces (e.g. Q7 Другое: "только текст" — буквы, пробелы, запятые) */
+  allowSpaces?: boolean;
 }
 
 export const CyrillicInput = React.forwardRef<HTMLInputElement, CyrillicInputProps>(
-  ({ value, onChange, maxLength = 30, error, allowCommas = false, className, ...props }, ref) => {
+  ({ value, onChange, maxLength = 30, error, allowCommas = false, allowSpaces = false, className, ...props }, ref) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const sanitized = sanitizeCyrillic(e.target.value, { allowCommas }).slice(0, maxLength);
+      const sanitized = sanitizeCyrillic(e.target.value, { allowCommas, allowSpaces }).slice(0, maxLength);
       onChange(sanitized);
     };
 

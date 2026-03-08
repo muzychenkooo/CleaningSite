@@ -26,7 +26,7 @@ type Props = {
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-const navLinkBase = 'block rounded-md px-3 py-2 font-medium transition-colors';
+const navLinkBase = 'block rounded-md px-3 py-1.5 font-medium transition-colors';
 const navLinkInactive = 'text-slate-700 hover:bg-slate-100 hover:text-primary-600';
 const navLinkActive = 'bg-primary-50 text-primary-700 ring-1 ring-primary-100';
 
@@ -143,12 +143,12 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
         <div
           ref={drawerRef}
           className={cn(
-            'mobileMenuDialog relative flex max-h-[80vh] w-full max-w-[420px] flex-col rounded-2xl bg-white shadow-xl transition-transform transition-opacity duration-200 ease-out',
+            'mobileMenuDialog relative flex max-h-[90vh] w-full max-w-[420px] flex-col rounded-2xl bg-white shadow-xl transition-transform transition-opacity duration-200 ease-out',
             open ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
           )}
         >
           {/* Dialog header */}
-          <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-4 py-3">
+          <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-4 py-2">
             <span className="font-semibold text-slate-900">Меню</span>
             <button
               type="button"
@@ -161,7 +161,7 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
           </div>
 
           {/* Scrollable nav body */}
-          <div className="mobileMenuContent flex flex-1 flex-col overflow-y-auto p-3">
+          <div className="mobileMenuContent flex flex-1 flex-col overflow-y-auto p-2">
             {/* Primary links */}
             <Link
               href="/private/"
@@ -190,7 +190,7 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
               Организациям
             </Link>
 
-            <hr className="my-2 border-slate-200" />
+            <hr className="my-1 border-slate-200" />
 
             {/* Other nav links */}
             {site.nav.main.map((item) => {
@@ -211,9 +211,9 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
               );
             })}
 
-            <hr className="my-2 border-slate-200" />
+            <hr className="my-1 border-slate-200" />
 
-            <div className="mt-1 flex flex-wrap items-center justify-between gap-3 rounded-md px-3 py-2 hover:bg-slate-50">
+            <div className="mt-0.5 flex flex-wrap items-center justify-between gap-2 rounded-md px-3 py-1.5 hover:bg-slate-50">
               <a
                 href={`tel:${site.phoneRaw}`}
                 className="font-medium text-primary-600"
@@ -224,7 +224,7 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
               <SocialIconLinks size="sm" />
             </div>
 
-            <div className="mt-3 grid grid-cols-1 min-[380px]:grid-cols-2 gap-3">
+            <div className="mt-2 grid grid-cols-1 min-[380px]:grid-cols-2 gap-2">
               <Button asChild size="lg" className="rounded-xl">
                 <Link href="/#zayavka" onClick={onClose}>
                   Калькулятор
@@ -232,7 +232,7 @@ export function MobileNavDrawer({ open, onClose, phoneDisplay }: Props) {
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-xl border-2">
                 <Link href="/#promo-form" onClick={onClose}>
-                  Заявка
+                  Обратная связь
                 </Link>
               </Button>
             </div>

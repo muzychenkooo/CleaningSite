@@ -36,7 +36,7 @@ export function TeamSection() {
     {
       id: 'office-1',
       name: 'Светлана',
-      role: 'Офис-менеджер',
+      role: 'Менеджер',
       photo: '/assets/team/менеджер.png',
     },
   ];
@@ -194,19 +194,15 @@ export function TeamSection() {
                     className="shrink-0 px-1 sm:px-2"
                   >
                     <div className="h-full rounded-xl border border-slate-200 bg-white p-3 text-center shadow-sm">
-                      <div className="mx-auto w-full max-w-[160px] h-40 rounded-2xl overflow-hidden bg-slate-200 ring-2 ring-slate-100 flex items-center justify-center">
+                      <div className="mt-1.5 mx-1.5 w-[calc(100%-12px)] aspect-[4/3] rounded-xl overflow-hidden bg-slate-200 flex items-center justify-center">
                         {member.photo ? (
                           <Image
                             src={assetUrl(member.photo)}
                             alt={member.name}
-                            width={160}
-                            height={200}
+                            width={320}
+                            height={240}
                             className="h-full w-full object-cover"
-                            style={
-                              member.name === 'Галина' || member.name === 'Сергей' || member.name === 'Иван'
-                                ? { objectPosition: '50% 20%' }
-                                : undefined
-                            }
+                            style={{ objectPosition: '50% 12%' }}
                             loading="lazy"
                           />
                         ) : (

@@ -56,10 +56,129 @@ export function GallerySection() {
   const [busy, setBusy] = React.useState(false);
 
   const [isMobile, setIsMobile] = React.useState(false);
-  const [showAllNews, setShowAllNews] = React.useState(false);
 
   // Keep a ref so transitionEnd handler always reads the latest offset
   const offsetRef = React.useRef(2);
+
+  /* ─── Reports carousel: 1 on mobile, 2 on sm-md, 3 on lg ─── */
+  const TOTAL_REPORTS = completedReports.length;
+  const buildExtendedReports = React.useCallback((visible: number) => {
+    const clone = visible;
+    return {
+      extended: [
+        ...completedReports.slice(-clone),
+        ...completedReports,
+        ...completedReports.slice(0, clone),
+      ],
+      clone,
+      initOffset: clone,
+    };
+  }, []);
+
+  const [reportsVisibleCount, setReportsVisibleCount] = React.useState(3);
+  const [reportsOffset, setReportsOffset] = React.useState(3);
+  const [reportsAnimated, setReportsAnimated] = React.useState(true);
+  const [reportsBusy, setReportsBusy] = React.useState(false);
+  const reportsOffsetRef = React.useRef(3);
+  const reportsVisibleRef = React.useRef(3);
+  const reportsCloneRef = React.useRef(3);
+  const { extended: REPORTS_EXTENDED, clone: REPORTS_CLONE } = buildExtendedReports(reportsVisibleCount);
+  const REPORTS_EXT_LEN = REPORTS_EXTENDED.length;
+  reportsCloneRef.current = REPORTS_CLONE;
+
+  const reportsTouchX = React.useRef(0);
+  const reportsHandleTouchStart = (e: React.TouchEvent) => {
+    reportsTouchX.current = e.touches[0]?.clientX ?? 0;
+  };
+  const reportsHandleTouchEnd = (e: React.TouchEvent) => {
+    const endX = e.changedTouches[0]?.clientX ?? 0;
+    const diff = reportsTouchX.current - endX;
+    if (Math.abs(diff) > 48) {
+      if (diff > 0) reportsHandleNext();
+      else reportsHandlePrev();
+    }
+  };
+
+  React.useEffect(() => {
+    function updateReports() {
+      const w = window.innerWidth;
+      const v = w < 640 ? 1 : w < 1024 ? 2 : 3;
+      if (v === reportsVisibleRef.current) return;
+      reportsVisibleRef.current = v;
+      const { initOffset } = buildExtendedReports(v);
+      reportsOffsetRef.current = initOffset;
+      setReportsOffset(initOffset);
+      setReportsAnimated(false);
+      setReportsVisibleCount(v);
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => setReportsAnimated(true)),
+      );
+    }
+    updateReports();
+    window.addEventListener('resize', updateReports, { passive: true });
+    return () => window.removeEventListener('resize', updateReports);
+  }, [buildExtendedReports]);
+
+  const reportsMoveTo = React.useCallback((newOffset: number, withAnim: boolean) => {
+    reportsOffsetRef.current = newOffset;
+    setReportsAnimated(withAnim);
+    setReportsOffset(newOffset);
+  }, []);
+
+  const reportsHandlePrev = () => {
+    if (reportsBusy) return;
+    setReportsBusy(true);
+    reportsMoveTo(reportsOffsetRef.current - 1, true);
+  };
+  const reportsHandleNext = () => {
+    if (reportsBusy) return;
+    setReportsBusy(true);
+    reportsMoveTo(reportsOffsetRef.current + 1, true);
+  };
+  const reportsHandleDotClick = (i: number) => {
+    if (reportsBusy) return;
+    const target = REPORTS_CLONE + i;
+    if (target === reportsOffsetRef.current) return;
+    setReportsBusy(true);
+    reportsMoveTo(target, true);
+  };
+
+  const reportsHandleTransitionEnd = React.useCallback(
+    (e: React.TransitionEvent<HTMLDivElement>) => {
+      if (e.propertyName !== 'transform') return;
+      const cur = reportsOffsetRef.current;
+      const cl = reportsCloneRef.current;
+      if (cur <= cl - 1) {
+        const jump = TOTAL_REPORTS + cur;
+        reportsMoveTo(jump, false);
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            setReportsAnimated(true);
+            setReportsBusy(false);
+          }),
+        );
+      } else if (cur >= cl + TOTAL_REPORTS) {
+        const jump = cl + (cur - cl - TOTAL_REPORTS);
+        reportsMoveTo(jump, false);
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            setReportsAnimated(true);
+            setReportsBusy(false);
+          }),
+        );
+      } else {
+        setReportsBusy(false);
+      }
+    },
+    [reportsMoveTo],
+  );
+
+  const reportsLogicalIndex = ((reportsOffset - REPORTS_CLONE) % TOTAL_REPORTS + TOTAL_REPORTS) % TOTAL_REPORTS;
+  const reportsTrackStyle: React.CSSProperties = {
+    width: `${(REPORTS_EXT_LEN / reportsVisibleCount) * 100}%`,
+    transform: `translateX(-${(reportsOffset / REPORTS_EXT_LEN) * 100}%)`,
+    transition: reportsAnimated ? 'transform 420ms cubic-bezier(0.4,0,0.2,1)' : 'none',
+  };
 
   // Rebuild derived values whenever visibleCount changes
   const { extended: EXTENDED, clone: CLONE } = buildExtended(visibleCount);
@@ -178,6 +297,32 @@ export function GallerySection() {
   // Which original photo index is at the left of the visible window
   const logicalIndex = ((offset - CLONE) % TOTAL + TOTAL) % TOTAL;
 
+  /* ─── Lightbox для фото «Мы в процессе» ─── */
+  const [lightboxIndex, setLightboxIndex] = React.useState<number | null>(null);
+  const openLightbox = (extendedIndex: number) => {
+    const originalIndex = ((extendedIndex - CLONE) % TOTAL + TOTAL) % TOTAL;
+    setLightboxIndex(originalIndex);
+  };
+  const closeLightbox = () => setLightboxIndex(null);
+  const lightboxPrev = () => {
+    setLightboxIndex((prev) => (prev === null ? null : (prev - 1 + TOTAL) % TOTAL));
+  };
+  const lightboxNext = () => {
+    setLightboxIndex((prev) => (prev === null ? null : (prev + 1) % TOTAL));
+  };
+  React.useEffect(() => {
+    if (lightboxIndex === null) return;
+    const onEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeLightbox();
+    };
+    document.addEventListener('keydown', onEscape);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onEscape);
+      document.body.style.overflow = '';
+    };
+  }, [lightboxIndex]);
+
   /**
    * CSS math:
    *   Track width  = (EXT_LEN / visibleCount) * 100%  of container
@@ -194,10 +339,6 @@ export function GallerySection() {
     transition: animated ? 'transform 420ms cubic-bezier(0.4,0,0.2,1)' : 'none',
   };
 
-  const displayedReports =
-    isMobile && !showAllNews ? completedReports.slice(0, 3) : completedReports;
-  const hasMoreReports = isMobile && completedReports.length > 3;
-
   return (
     <section id="foto-video" className="w-full py-16 sm:py-24 bg-slate-50 scroll-mt-20">
       <Container>
@@ -210,7 +351,7 @@ export function GallerySection() {
         <div className="mt-6 relative">
           {/* Viewport — занимает почти всю ширину; стрелки поверх */}
           <div
-            className="mx-10 sm:mx-12 overflow-hidden touch-pan-y"
+            className="mx-0 sm:mx-12 overflow-hidden touch-pan-y"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
@@ -225,7 +366,12 @@ export function GallerySection() {
                   style={{ width: `${(1 / EXT_LEN) * 100}%` }}
                   className="shrink-0 px-1 sm:px-2"
                 >
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-200 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => openLightbox(i)}
+                    className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-200 shadow-sm block cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+                    aria-label={`Открыть ${photo.alt}`}
+                  >
                     <Image
                       src={assetUrl(photo.src)}
                       alt={photo.alt}
@@ -234,19 +380,19 @@ export function GallerySection() {
                       sizes="(max-width: 639px) 100vw, 60vw"
                       loading="lazy"
                     />
-                  </div>
+                  </button>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Prev */}
+          {/* Prev — только на sm+, поверх фото, полупрозрачные; на мобиле скрыты, свайп работает */}
           <button
             type="button"
             onClick={handlePrev}
             disabled={busy}
             aria-label="Предыдущее фото"
-            className="carousel-arrow absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-base sm:text-lg select-none"
+            className="carousel-arrow flex absolute left-3 sm:left-12 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border-0 bg-white/70 shadow-md text-slate-800 hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-xl sm:text-2xl select-none z-10"
           >
             ‹
           </button>
@@ -257,11 +403,66 @@ export function GallerySection() {
             onClick={handleNext}
             disabled={busy}
             aria-label="Следующее фото"
-            className="carousel-arrow absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-base sm:text-lg select-none"
+            className="carousel-arrow flex absolute right-3 sm:right-12 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border-0 bg-white/70 shadow-md text-slate-800 hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-xl sm:text-2xl select-none z-10"
           >
             ›
           </button>
         </div>
+
+        {/* Lightbox: полноэкранный просмотр фото */}
+        {lightboxIndex !== null && (
+          <div
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Просмотр фото"
+          >
+            <button
+              type="button"
+              onClick={closeLightbox}
+              className="absolute inset-0 cursor-default"
+              aria-label="Закрыть"
+            />
+            <div
+              className="relative z-10 max-h-full max-w-full w-full h-full flex items-center justify-center cursor-default"
+              onClick={closeLightbox}
+              role="presentation"
+            >
+              <Image
+                src={assetUrl(galleryPhotos[lightboxIndex].src)}
+                alt={galleryPhotos[lightboxIndex].alt}
+                width={1920}
+                height={1440}
+                className="max-h-full max-w-full w-auto h-auto object-contain cursor-default"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={closeLightbox}
+              className="absolute top-4 right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              aria-label="Закрыть"
+            >
+              ×
+            </button>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); lightboxPrev(); }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full border-0 bg-white/70 shadow-md text-slate-800 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white transition-colors text-2xl select-none"
+              aria-label="Предыдущее фото"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); lightboxNext(); }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full border-0 bg-white/70 shadow-md text-slate-800 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white transition-colors text-2xl select-none"
+              aria-label="Следующее фото"
+            >
+              ›
+            </button>
+          </div>
+        )}
 
         {/* Dots (windowed, чтобы не выезжали за экран) */}
         <div className="mt-4 flex justify-center gap-1" role="group" aria-label="Слайды">
@@ -302,71 +503,116 @@ export function GallerySection() {
           })()}
         </div>
 
-        {/* ── Видео с нами ── */}
+        {/* ── Видео с объектов ── */}
         <h2 className="font-display mt-16 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-          Видео с нами
+          Видео с объектов
         </h2>
         <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-start">
           <VideoWithOverlay
             src={assetUrl('/assets/videos/video1.mp4')}
-            poster={assetUrl('/assets/gallery/posle-remonta.jpg')}
-            label="Видео с нами — 1"
+            poster={assetUrl('/assets/gallery/video1-poster.png')}
+            label="Видео с объектов — 1"
             wrapperClassName="flex-1 rounded-xl bg-slate-900 shadow-sm"
             videoClassName="w-full aspect-video object-cover"
           />
           <VideoWithOverlay
             src={assetUrl('/assets/videos/video2.mp4')}
-            poster={assetUrl('/assets/gallery/20220806.jpg')}
-            label="Видео с нами — 2"
+            poster={assetUrl('/assets/gallery/video2-poster.png')}
+            label="Видео с объектов — 2"
             wrapperClassName="flex-1 rounded-xl bg-slate-900 shadow-sm"
             videoClassName="w-full aspect-video object-cover"
           />
         </div>
 
-        {/* ── Выполненные работы ── */}
+        {/* ── Выполненные работы (слайдер: 1 на мобиле, 3 на ПК) ── */}
         <h2 className="font-display mt-16 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
           Выполненные работы
         </h2>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {displayedReports.map((report) => (
-            <div key={report.id} className="rounded-xl border border-slate-200 bg-white p-6 h-full flex flex-col">
-              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-slate-200">
-                <Image
-                  src={assetUrl('/assets/restaurant/restaurant.png')}
-                  alt={report.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, 224px"
-                  loading="lazy"
-                />
-              </div>
-              <div className="mt-4 flex-1 flex flex-col">
-                <h3 className="font-semibold text-slate-900">{report.title}</h3>
-                <p className="mt-2 text-sm text-slate-600 line-clamp-3">{report.excerpt}</p>
-                <div className="mt-4 flex items-center justify-between gap-3">
-                  <Link
-                    href={report.href}
-                    className="text-sm font-medium text-primary-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded"
-                  >
-                    Читать далее
-                  </Link>
+        <div className="mt-6 relative">
+          <div
+            className="mx-0 sm:mx-12 overflow-hidden touch-pan-y"
+            onTouchStart={reportsHandleTouchStart}
+            onTouchEnd={reportsHandleTouchEnd}
+          >
+            <div
+              style={reportsTrackStyle}
+              onTransitionEnd={reportsHandleTransitionEnd}
+              className="flex"
+            >
+              {REPORTS_EXTENDED.map((report, i) => (
+                <div
+                  key={`${report.id}-${i}`}
+                  style={{ width: `${(1 / REPORTS_EXT_LEN) * 100}%` }}
+                  className="shrink-0 px-1 sm:px-2"
+                >
+                  <div className="rounded-xl border border-slate-200 bg-white p-6 h-full flex flex-col">
+                    <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-slate-200">
+                      <Image
+                        src={assetUrl('image' in report && report.image ? report.image : '/assets/restaurant/restaurant.png')}
+                        alt={report.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                        loading="lazy"
+                        style={'imagePosition' in report && report.imagePosition ? { objectPosition: report.imagePosition } : undefined}
+                      />
+                    </div>
+                    <div className="mt-4 flex-1 flex flex-col min-h-0">
+                      <h3 className="font-semibold text-slate-900">{report.title}</h3>
+                      <p className="mt-2 text-sm text-slate-600 line-clamp-3">{report.excerpt}</p>
+                      <div className="flex-1 min-h-0" aria-hidden />
+                      <div className="mt-4 flex items-center justify-between gap-3">
+                        <Link
+                          href={report.href}
+                          className="text-sm font-medium text-primary-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded"
+                        >
+                          Читать далее
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={reportsHandlePrev}
+            disabled={reportsBusy}
+            aria-label="Предыдущие работы"
+            className="carousel-arrow flex absolute left-3 sm:left-12 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border-0 bg-white/70 shadow-md text-slate-800 hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-xl sm:text-2xl select-none z-10"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            onClick={reportsHandleNext}
+            disabled={reportsBusy}
+            aria-label="Следующие работы"
+            className="carousel-arrow flex absolute right-3 sm:right-12 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border-0 bg-white/70 shadow-md text-slate-800 hover:bg-white/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 transition-colors disabled:opacity-40 text-xl sm:text-2xl select-none z-10"
+          >
+            ›
+          </button>
+        </div>
+        <div className="mt-4 flex justify-center gap-1" role="group" aria-label="Слайды выполненных работ">
+          {Array.from({ length: TOTAL_REPORTS }).map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => reportsHandleDotClick(i)}
+              aria-label={`Работа ${i + 1}`}
+              aria-current={i === reportsLogicalIndex ? 'true' : undefined}
+              className="flex h-6 w-6 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded"
+            >
+              <span
+                className={`block rounded-full transition-all duration-300 ${
+                  i === reportsLogicalIndex ? 'h-2 w-6 bg-primary-600' : 'h-2 w-2 bg-slate-300 hover:bg-slate-400'
+                }`}
+              />
+            </button>
           ))}
         </div>
-
-        {hasMoreReports && (
-          <div className="mt-4 flex justify-center sm:hidden">
-            <button
-              type="button"
-              onClick={() => setShowAllNews((prev) => !prev)}
-              className="inline-flex items-center justify-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-primary-600 shadow-sm ring-1 ring-primary-100 hover:bg-primary-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-            >
-              {showAllNews ? 'Скрыть' : 'Смотреть больше'}
-            </button>
-          </div>
-        )}
 
       </Container>
     </section>

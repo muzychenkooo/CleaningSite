@@ -11,7 +11,7 @@ export function LeaderMessageSection() {
           Обращение руководителя
         </h2>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-12 items-start">
+        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-12 items-stretch">
           {/* Плейсхолдер под фото: золотая середина по размеру */}
           <div
             className="relative w-full aspect-[3/4] max-w-[200px] sm:max-w-[260px] lg:max-w-sm mx-auto lg:mx-0 rounded-2xl bg-slate-200 flex items-center justify-center"
@@ -20,7 +20,7 @@ export function LeaderMessageSection() {
             <span className="text-slate-400 text-sm">Фото</span>
           </div>
 
-          <div className="rounded-2xl bg-slate-50 p-6 sm:p-8">
+          <div className="rounded-2xl bg-slate-50 p-6 sm:p-8 h-full min-h-0 flex flex-col">
             <p className="text-primary-600 font-semibold text-sm uppercase tracking-wide">
               Руководитель
             </p>
@@ -53,6 +53,11 @@ export function LeaderMessageSection() {
                 чистоте.
               </p>
             </div>
+            <p className="mt-6 text-slate-600 leading-relaxed">
+              <a href="#" className="text-primary-600 hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm">
+                почта
+              </a>
+            </p>
           </div>
         </div>
       </Container>

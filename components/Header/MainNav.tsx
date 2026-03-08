@@ -4,13 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { site } from '@/data/site';
-import {
-  apartmentAnchors,
-  houseAnchors,
-  windowWashAnchors,
-  dryCleaningAnchors,
-  businessNav,
-} from '@/data/sitemap';
+import { businessNav, privateNav } from '@/data/sitemap';
 import { cn } from '@/lib/utils';
 
 /** pathname matches href exactly or (if prefix) as section (e.g. /private/, /business/). */
@@ -72,7 +66,11 @@ function IndividualsMegaMenu({ pathname }: { pathname: string }) {
   );
 
   return (
-    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <Link
         href="/private/"
         className={cn(
@@ -91,126 +89,42 @@ function IndividualsMegaMenu({ pathname }: { pathname: string }) {
         </span>
       </Link>
 
-      {/* Мегаменю: 4 колонки, как на референсе */}
+      {/* Выпадающий список ровно под «Частным клиентам», столбиком */}
       <div
         className={cn(
-          'absolute left-1/2 top-full z-40 w-[min(1040px,calc(100vw-3rem))] -translate-x-1/2 pt-3 transition-all duration-200',
+          'absolute left-0 top-full z-40 w-max pt-2 transition-all duration-200',
           open
             ? 'pointer-events-auto translate-y-0 opacity-100'
             : 'pointer-events-none -translate-y-1 opacity-0'
         )}
       >
-        <div className="max-h-[70vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white px-6 py-5 shadow-xl">
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {/* Уборка квартир */}
-            <div>
-              <div className="mb-2 text-sm font-semibold text-slate-900">
-                Уборка квартир
-              </div>
-              <ul className="space-y-1.5 text-sm">
-                {apartmentAnchors.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      href={`/private/apartment/#${item.id}`}
-                      className="block text-slate-700 hover:text-primary-600"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Уборка домов */}
-            <div>
-              <div className="mb-2 text-sm font-semibold text-slate-900">
-                Уборка домов
-              </div>
-              <ul className="space-y-1.5 text-sm">
-                {houseAnchors.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      href={`/private/house/#${item.id}`}
-                      className="block text-slate-700 hover:text-primary-600"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Дополнительно */}
-            <div>
-              <div className="mb-2 text-sm font-semibold text-slate-900">
-                Дополнительно
-              </div>
-              <ul className="space-y-1.5 text-sm">
-                {windowWashAnchors.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      href={`/private/window-wash/#${item.id}`}
-                      className="block text-slate-700 hover:text-primary-600"
-                    >
-                      Мойка окон — {item.label}
-                    </Link>
-                  </li>
-                ))}
-                <li>
-                  <Link
-                    href="/services/ozonation/"
-                    className="block text-slate-700 hover:text-primary-600"
-                  >
-                    Озонирование
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/services/odor-removal/"
-                    className="block text-slate-700 hover:text-primary-600"
-                  >
-                    Удаление запахов
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/services/disinfection/"
-                    className="block text-slate-700 hover:text-primary-600"
-                  >
-                    Дезинфекция
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Химчистка */}
-            <div>
-              <div className="mb-2 text-sm font-semibold text-slate-900">
-                Химчистка
-              </div>
-              <ul className="space-y-1.5 text-sm">
-                {dryCleaningAnchors.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      href={`/private/dry-cleaning/#${item.id}`}
-                      className="block text-slate-700 hover:text-primary-600"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+        <div className="rounded-xl border border-slate-200 bg-white py-2 shadow-xl min-w-[200px]">
+          <ul className="space-y-0.5 text-sm">
+            {privateNav.filter((item) => item.label !== 'Услуги для частных лиц').map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="block px-4 py-2 text-slate-700 hover:bg-slate-50 hover:text-primary-600"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
   );
 }
 
+const BUSINESS_COLUMNS = 3;
+
 function BusinessMegaMenu({ pathname }: { pathname: string }) {
   const active = isActive(pathname, '/business/', true);
-  const columns = chunk(businessNav, 6);
+  const columns = chunk(
+    businessNav,
+    Math.ceil(businessNav.length / BUSINESS_COLUMNS)
+  );
 
   const [open, setOpen] = React.useState(false);
   const closeTimeoutRef = React.useRef<number | null>(null);
@@ -246,7 +160,11 @@ function BusinessMegaMenu({ pathname }: { pathname: string }) {
   );
 
   return (
-    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <Link
         href="/business/"
         className={cn(
@@ -267,21 +185,16 @@ function BusinessMegaMenu({ pathname }: { pathname: string }) {
 
       <div
         className={cn(
-          'absolute left-1/2 top-full z-40 w-[min(1040px,calc(100vw-3rem))] -translate-x-1/2 pt-3 transition-all duration-200',
+          'absolute left-0 top-full z-40 w-max max-w-[calc(100vw-2rem)] pt-2 transition-all duration-200',
           open
             ? 'pointer-events-auto translate-y-0 opacity-100'
             : 'pointer-events-none -translate-y-1 opacity-0'
         )}
       >
         <div className="max-h-[70vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white px-6 py-5 shadow-xl">
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-6 grid-cols-3">
             {columns.map((col, idx) => (
               <div key={idx}>
-                {idx === 0 && (
-                  <div className="mb-2 text-sm font-semibold text-slate-900">
-                    Уборка для организаций
-                  </div>
-                )}
                 <ul className="space-y-1.5 text-sm">
                   {col.map((item) => (
                     <li key={item.href}>

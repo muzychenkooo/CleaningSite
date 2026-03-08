@@ -21,7 +21,7 @@ export function ServicesSection() {
         </h2>
         <div className="mt-10">
           <div
-            className="inline-flex flex-col gap-1.5 rounded-xl bg-slate-100 p-1.5 text-slate-600 min-w-0 max-w-full sm:inline-flex sm:flex-row"
+            className="inline-flex flex-row flex-nowrap gap-1.5 rounded-xl bg-slate-100 p-1.5 text-slate-600 min-w-0 max-w-full w-full sm:w-auto"
             role="tablist"
             aria-label="Категория услуг"
           >
@@ -31,13 +31,13 @@ export function ServicesSection() {
               aria-selected={activeTab === 'individuals'}
               onClick={() => setActiveTab('individuals')}
               className={cn(
-                'inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium min-w-[13rem] max-w-full text-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
+                'inline-flex flex-1 sm:flex-none items-center justify-center rounded-lg px-3 sm:px-4 py-2 text-sm font-medium min-w-0 sm:min-w-[13rem] max-w-full text-center whitespace-nowrap transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
                 activeTab === 'individuals'
                   ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200/80'
                   : 'hover:bg-white/60',
               )}
             >
-              Для частных клиентов
+              Частные клиенты
             </button>
             <button
               type="button"
@@ -45,13 +45,13 @@ export function ServicesSection() {
               aria-selected={activeTab === 'business'}
               onClick={() => setActiveTab('business')}
               className={cn(
-                'inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium min-w-[13rem] max-w-full text-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
+                'inline-flex flex-1 sm:flex-none items-center justify-center rounded-lg px-3 sm:px-4 py-2 text-sm font-medium min-w-0 sm:min-w-[13rem] max-w-full text-center whitespace-nowrap transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
                 activeTab === 'business'
                   ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200/80'
                   : 'hover:bg-white/60',
               )}
             >
-              Для организаций
+              Организации
             </button>
           </div>
           {/* Подзаголовок под переключателем */}
