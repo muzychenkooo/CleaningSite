@@ -20,6 +20,20 @@ const galleryPhotos = [
   { src: '/assets/gallery/IMG_20230723.jpg', alt: 'Уборка — фото 10' },
   { src: '/assets/gallery/IMG_20240712.jpg', alt: 'Уборка — фото 11' },
   { src: '/assets/gallery/IMG_20241113.jpg', alt: 'Уборка — фото 12' },
+  /* Загруженные фото «Мы в процессе» */
+  { src: '/assets/gallery/20220806_164020-c7d28d52-3992-4159-8afe-a3f5d89057b7.png', alt: 'Уборка — мы в процессе 1' },
+  { src: '/assets/gallery/20220813_174255-c717d6d5-822e-4659-9ddb-2c2d1126cdd9.png', alt: 'Уборка — мы в процессе 2' },
+  { src: '/assets/gallery/20220820_104103-528b32bf-58d5-4674-a726-ff0798582ce7.png', alt: 'Уборка — мы в процессе 3' },
+  { src: '/assets/gallery/20220820_164514-c5b22d81-7cf5-48c4-b295-c68d235d4f66.png', alt: 'Уборка — мы в процессе 4' },
+  { src: '/assets/gallery/20250605_141357-efb6b450-47a9-4854-824d-dba77bbff624.png', alt: 'Уборка — мы в процессе 5' },
+  { src: '/assets/gallery/20260123_102724-98ec1710-c4ce-4951-b4d5-2633e1686d18.png', alt: 'Уборка — мы в процессе 6' },
+  { src: '/assets/gallery/20260123_142851-cc64339a-e665-42d4-91e3-27234782a2df.png', alt: 'Уборка — мы в процессе 7' },
+  { src: '/assets/gallery/IMG_20230223_155646-2fd95a99-a08a-4a96-9ac5-028456b4bc52.png', alt: 'Уборка — мы в процессе 8' },
+  { src: '/assets/gallery/IMG_20230223_163415-2a667984-8ce1-4c91-8d32-565162f85261.png', alt: 'Уборка — мы в процессе 9' },
+  { src: '/assets/gallery/IMG_20230310_141722-4598cb79-2af4-40cb-affd-4d2404f6aede.png', alt: 'Уборка — мы в процессе 10' },
+  { src: '/assets/gallery/IMG_20230512_140333-698f9d1e-039c-47be-a1fe-0970b223a327.png', alt: 'Уборка — мы в процессе 11' },
+  { src: '/assets/gallery/IMG_20240601_150532-e9ff74c5-40cf-4bf3-9fa8-c22d4a905c0b.png', alt: 'Уборка — мы в процессе 12' },
+  { src: '/assets/gallery/IMG_20240614_103400-073c0ed1-5b21-4d0f-b4e2-cdd971406c9f.png', alt: 'Уборка — мы в процессе 13' },
 ];
 
 /* ─── Carousel constants ─────────────────────────────────────────────── */
