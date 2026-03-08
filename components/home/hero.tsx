@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { site } from '@/data/site';
 import { Container } from '@/components/layout/container';
 import { Button } from '@/components/ui/button';
+import { assetUrl } from '@/lib/asset-url';
 
-const HERO_BANNER = '/assets/banner/hero-banner.png';
+const HERO_BANNER_PATH = '/assets/banner/hero-banner.png';
 
 export function Hero() {
   return (
@@ -12,13 +13,13 @@ export function Hero() {
       <div
         aria-hidden
         className="absolute inset-0 bg-cover bg-no-repeat bg-center lg:hidden"
-        style={{ backgroundImage: `url(${HERO_BANNER})` }}
+        style={{ backgroundImage: `url(${assetUrl(HERO_BANNER_PATH)})` }}
       />
       <div
         aria-hidden
         className="absolute inset-0 bg-no-repeat hidden lg:block"
         style={{
-          backgroundImage: `url(${HERO_BANNER})`,
+          backgroundImage: `url(${assetUrl(HERO_BANNER_PATH)})`,
           backgroundSize: 'cover',
           backgroundPosition: 'right 12%',
         }}
